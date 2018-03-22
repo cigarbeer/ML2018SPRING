@@ -1,0 +1,8 @@
+MODEL_NAME = 'model.npy'
+STATISTICS = 'statistics.npy'
+SELECTED_FEATURE = ['PM2.5']
+CHUNK_SIZE = 4
+VALIDATE_RATE = 0.15
+ETA = 0.1
+LAMBDA = 0.001
+N_ITERS = 2000

@@ -131,7 +131,7 @@ def main():
 
     X_n, y = validate_data(st.VALIDATE_RATE, h, J, X_n, y)
 
-    init_theta = initialize_theta(X_n, y)
+    init_theta = initialize_theta_to_zero(X_n, y)
 
     theta, theta_record, loss_record = gradient_descent(init_theta, h, X_n, y, eta=st.ETA, lamb=st.LAMBDA, n_iters=st.N_ITERS)
 

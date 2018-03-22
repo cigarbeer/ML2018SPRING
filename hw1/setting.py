@@ -1,9 +1,9 @@
 MODEL_NAME = './model/model.npy'
 STATISTICS = './model/statistics.npy'
 TRAINING_SET = './dataset/train.csv'
-SELECTED_FEATURE = ['PM2.5']
-CHUNK_SIZE = 4
-VALIDATE_RATE = 0.15
-ETA = 0.1
-LAMBDA = 0.001
-N_ITERS = 2000
+SELECTED_FEATURE = ['PM2.5'] 
+CHUNK_SIZE = 9
+VALIDATE_RATE = 0
+ETA = 10
+LAMBDA = 0
+N_ITERS = 200000

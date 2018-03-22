@@ -27,11 +27,13 @@ def write_results(results, output_file):
 
 def main(input_file, output_file):
     dm = DataManager()
+    dm.read_training_data(st.TRAINING_SET)
     dm.read_testing_data(input_file)
     testX = dm.select_testing_feature(st.SELECTED_FEATURE)
 
     theta = np.load(st.MODEL_NAME)
     mu, sigma = np.load(st.STATISTICS)
+    print('mu', mu, 'sigma', sigma)
 
     results = make_predictions(theta, testX, mu, sigma)
 

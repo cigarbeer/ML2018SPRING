@@ -5,15 +5,19 @@ import sys
 from DataManager import DataManager 
 import setting as st 
 
+def predict(theta, instance):
+    h_theta = np.dot(instance, theta)
+    return h_theta
+
 
 def make_predictions(theta, testX, mu, sigma):
     results = []
-    for i, tdf in tX.items():
+    for i, tdf in testX.items():
         tdf = tdf.iloc[-st.CHUNK_SIZE:, :]
 
         instance_n = (tdf.values.flatten() - mu) / sigma
 
-        results.append((i, predict(norm_theta, np.insert(instance_n.reshape((1, -1)), obj=0, values=1, axis=1))[0, 0]))
+        results.append((i, predict(theta, np.insert(instance_n.reshape((1, -1)), obj=0, values=1, axis=1))[0, 0]))
     return np.array(results)
 
 def write_results(results, output_file):
@@ -29,7 +33,7 @@ def main(input_file, output_file):
     theta = np.load(st.MODEL_NAME)
     mu, sigma = np.load(st.STATISTICS)
 
-    results = make_predictions(theat, testX, mu, sigma)
+    results = make_predictions(theta, testX, mu, sigma)
 
     write_results(results, output_file)
 

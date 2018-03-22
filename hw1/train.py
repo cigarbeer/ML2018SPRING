@@ -79,6 +79,7 @@ def gradient_descent(theta, h, X, y, eta, lamb, n_iters):
         theta = theta - eta * grad / np.sqrt(grad_square_sum)
         theta_record[i] = theta
         loss_record[i] = J(theta, h, lamb, X, y)
+        print('iteration:', i, 'loss:', loss_record[i])
         
     return theta, theta_record, loss_record
 
@@ -113,10 +114,10 @@ def validate_data(rate, h, J, X, y):
     return np.delete(X, to_drop_idx, axis=0), np.delete(y, to_drop_idx, axis=0)
 
 
-def main(input_file, output_file):
+def main():
     dm = DataManager()
 
-    dm.read_training_data(input_file)
+    dm.read_training_data(st.TRAINING_SET)
 
     mdfs = dm.select_feature_to_mdfs(st.SELECTED_FEATURE)
 
@@ -138,4 +139,4 @@ def main(input_file, output_file):
     np.save(st.STATISTICS, np.array([mu, sigma]))
 
 if __name__ == '__main__':
-    main(sys.argv[1], sys.argv[2])
+    main()

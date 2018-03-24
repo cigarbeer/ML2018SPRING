@@ -86,3 +86,29 @@ def write_preditction(p_file, pred):
     df.index = df.index + 1
     df.to_csv(p_file, index_label='id')
     return df 
+
+def get_shuffled_index(X, y):
+    m, n = X.shape 
+    sidx = np.random.permutation(m)
+    return sidx 
+
+def cross_validation(h, X, y, eta=0.1, lmbda=0, n_iters=10000, n_fold=1):
+    m, n = X.shape 
+
+    n_Val = np.int(m / n_fold)
+
+    theta_init = initialize_theta(X, y)
+
+    for fold in range(n_fold):
+        sidx = get_shuffled_index(X, y)
+        sX = X[sidx]
+        sy = y[sidx]
+
+        valX = sX[:n_Val] 
+        valy = sy[:n_Val]
+        trainX = sX[n_Val:]
+        trainy = sy[n_Val:]
+
+        theta, theta_record, loss_record = gradient_descent(theta_init, h, trainX, trainy, eta, lmbda, n_iters)
+
+        val_error

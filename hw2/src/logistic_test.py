@@ -1,7 +1,7 @@
 import numpy as np 
 
 from util import * 
-import setting as st 
+import logistic_setting as st 
 
 import sys 
 

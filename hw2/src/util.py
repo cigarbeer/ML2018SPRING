@@ -27,13 +27,12 @@ def h(theta, X):
     return sigmoid(np.dot(X, theta))
 
 def J(theta, h, X, y, lmbda):
-    epsilon = 1e-50
     m, n = X.shape 
     h_theta = h(theta, X)
     l2_reg_cost = lmbda * (1 / 2) * np.dot(theta[1:].T, theta[1:])
     error_cost = -np.sum(y * np.nan_to_num(np.log(h_theta)) + (1 - y) * np.nan_to_num(np.log(1 - h_theta)))
 
-    J = (1 / m) * (np.nan_to_num(error_cost) + l2_reg_cost)
+    J = (1 / m) * (error_cost + l2_reg_cost)
     return J 
 
 def gradient(theta, h, X, y, lmbda):
@@ -133,7 +132,7 @@ def chunk_validation_set(sidx, X, y, n_fold, fold):
     return trainX, trainy, valX, valy    
 
 
-def cross_validation(theta_init, h, J, X, y, eta, lmbda, epoch, n_fold):
+def cross_validation(theta_init, h, J, X, y, eta, lmbda, epoch, n_fold, n_minibatch):
     m, n = X.shape 
 
     train_error = np.zeros((n_fold, 1))
@@ -142,22 +141,23 @@ def cross_validation(theta_init, h, J, X, y, eta, lmbda, epoch, n_fold):
     sidx = get_shuffled_index(X, y)
 
     for fold in range(n_fold):
-        print('fold:', fold)
         trainX, trainy, valX, valy = chunk_validation_set(sidx, X, y, n_fold, fold)
 
-        theta, mu, sigma = train(theta_init, h, J, trainX, trainy, eta, lmbda, epoch)
+        theta, mu, sigma, theta_record, loss_record = train(theta_init, h, J, trainX, trainy, eta, lmbda, epoch, n_minibatch)
 
         train_error[fold] = test(theta, h, mu, sigma, trainX, trainy)
         val_error[fold] = test(theta, h, mu, sigma, valX, valy)
 
-    return np.average(train_error), np.average(val_error)
+    return train_error, val_error
 
 
-def choose_parameters(lmbda_list, theta_init, h, J, X, y, eta, epoch, n_fold):
-    lmbda_to_error = np.zeros((lmbda_list.size, 2))
+def choose_parameters(lmbda_list, theta_init, h, J, X, y, eta, epoch, n_fold, n_minibatch):
+    train_error_avg = np.zeros((lmbda_list.size, 1))
+    val_error_avg = np.zeros((lmbda_list.size, 1))
 
     for i, lmbda in enumerate(lmbda_list):
-        train_error, val_error = cross_validation(theta_init, h, J, X, y, eta, lmbda, epoch, n_fold)
-        lmbda_to_error[i] = np.array([train_error, val_error])
+        train_error, val_error = cross_validation(theta_init, h, J, X, y, eta, lmbda, epoch, n_fold, n_minibatch)
+        train_error_avg[i] = np.mean(train_error)
+        val_error_avg[i] = np.mean(val_error)
 
-    return lmbda_to_error
+    return train_error_avg, val_error_avg

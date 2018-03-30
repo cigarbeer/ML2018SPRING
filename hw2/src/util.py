@@ -113,3 +113,47 @@ def get_shuffled_index(X, y):
     sidx = np.random.permutation(m)
     return sidx 
 
+def split_data_by_class(X, y):
+    classes = {}
+    y = y.flatten()
+    for c in np.unique(y):
+        classes[c] = X[y == c]
+    return classes
+
+def get_training_and_validation_set(X, y, rate):
+    m, n = X.shape 
+    sample_idx = np.random.choice(m, size=int(rate*m), replace=False)
+    val_X = X[sample_idx]
+    val_y = y[sample_idx]
+    train_X = np.delete(X, obj=sample_idx, axis=0)
+    train_y = np.delete(y, obj=sample_idx, axis=0)
+    return (train_X, train_y), (val_X, val_y)
+
+def get_gaussian_parameters(X):
+    mu = np.mean(X, axis=0)
+    cov = np.cov(X.T, bias=True)
+    return mu.reshape((-1, 1)), cov
+
+def get_generative_model(X, y):
+    classes = split_data_by_class(X, y)
+    mu0, cov0 = get_gaussian_parameters(classes[0])
+    mu1, cov1 = get_gaussian_parameters(classes[1])
+    m0, n = classes[0].shape 
+    m1, n = classes[1].shape 
+    r0 = m0 / (m0 + m1)
+    r1 = m1 / (m0 + m1)
+    cov = r0 * cov0 + r1 * cov1 
+    return mu0, mu1, cov, m0, m1 
+
+def gen_predict(X, mu0, mu1, cov, ratio0, ratio1):
+    cov_inv = np.linalg.pinv(cov)
+    w = np.dot((mu1 - mu0).T, cov_inv).T 
+    b = -0.5 * np.dot(np.dot(mu1.T, cov_inv), mu1) + 0.5 * np.dot(np.dot(mu0.T, cov_inv), mu0) + np.log(ratio1/ratio0)
+    return (sigmoid(np.dot(X, w) + b) > 0.5).astype(np.int) 
+
+# def gaussian_pdf(mu, cov, X):
+#     return np.power(np.sqrt((2*np.pi)**n * np.linalg.det(cov)), -0.5) * np.exp(-0.5 * np.dot(np.dot(X - mu, np.linalg.pinv(cov)), (X - mu).T))
+
+
+
+    

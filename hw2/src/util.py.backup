@@ -1,5 +1,7 @@
 import pandas as pd 
 import numpy as np 
+from Hypothesis import Hypothesis 
+from ObjectiveFunction import ObjectiveFunction 
 
 def read_training_data(X_file, y_file):
     X = pd.read_csv(X_file)
@@ -18,7 +20,7 @@ def add_bias_term(X):
 
 def initialize_theta(X, y):
     m, n = X.shape
-    return np.zeros((n, 1))
+    return np.zeros((n+1, 1))
 
 def sigmoid(z):
     return 1 / (1 + np.exp(-z))
@@ -45,7 +47,11 @@ def gradient(theta, h, X, y, lmbda):
 def gradient_descent(theta, h, J, X, y, eta, lmbda, epoch, n_minibatch):
     m, n = X.shape
     loss_record = []
+    # theta_record = np.zeros((epoch*n_minibatch, *theta.shape))
+    # loss_record = np.zeros((epoch*n_minibatch, 1))
 
+    # theta_record[0] = theta 
+    # loss_record[0] = J(theta, h, X, y, lmbda)
     grad_square_sum = np.zeros(theta.shape)
 
     for ep in range(epoch):
@@ -58,16 +64,17 @@ def gradient_descent(theta, h, J, X, y, eta, lmbda, epoch, n_minibatch):
             adagrad = np.nan_to_num(grad / np.sqrt(grad_square_sum))
             theta = theta - eta * adagrad
 
-            loss_record.append(J(theta, h, mX, my, lmbda))
-            print('epoch:', ep, 'mini batch:', i , 'loss:', loss_record[-1])
+            theta_record[ep*n_minibatch+i] = theta 
+            loss_record[ep*n_minibatch+i] = J(theta, h, mX, my, lmbda)
+            print('epoch:', ep, 'iteration:', i , 'loss:', loss_record[ep*n_minibatch+i])
 
-    return theta, loss_record
+    return theta, theta_record, loss_record
 
-def train(h, J, X, y, eta, lmbda, epoch, n_minibatch):
+def train(theta_init, h, J, X, y, eta, lmbda, epoch, n_minibatch):
+    X, mu, sigma = normalize_data(X)
     X = add_bias_term(X) 
-    theta_init = initialize_theta(X, y)
-    theta, loss_record = gradient_descent(theta_init, h, J, X, y, eta, lmbda, epoch, n_minibatch)
-    return theta, loss_record
+    theta, theta_record, loss_record = gradient_descent(theta_init, h, J, X, y, eta, lmbda, epoch, n_minibatch)
+    return theta, mu, sigma, theta_record, loss_record
 
 
 def test(theta, h, mu, sigma, tX, ty):
@@ -83,12 +90,6 @@ def save_model(m_path, theta):
 def save_statistics(s_path, mu, sigma):
     np.save(s_path, np.array([mu, sigma]))
     return 
-
-def load_model(m_path):
-    return np.load(m_path)
-
-def load_statistics(s_path):
-    return np.load(s_path)
 
 def read_testing_data(t_file):
     t = pd.read_csv(t_file)
@@ -113,3 +114,52 @@ def get_shuffled_index(X, y):
     sidx = np.random.permutation(m)
     return sidx 
 
+def chunk_validation_set(sidx, X, y, n_fold, fold):
+    m, n  = X.shape
+
+    chunk_size = np.int(m / n_fold)
+    val_start = fold * chunk_size
+    
+    sX = X[sidx]
+    sy = y[sidx]
+
+    val_index = np.s_[val_start:val_start+chunk_size]
+
+    valX = sX[val_index]
+    valy = sy[val_index] 
+
+    trainX = np.delete(sX, obj=val_index, axis=0)
+    trainy = np.delete(sy, obj=val_index, axis=0)
+
+    return trainX, trainy, valX, valy    
+
+
+def cross_validation(theta_init, h, J, X, y, eta, lmbda, epoch, n_fold, n_minibatch):
+    m, n = X.shape 
+
+    train_error = np.zeros((n_fold, 1))
+    val_error = np.zeros((n_fold, 1))
+
+    sidx = get_shuffled_index(X, y)
+
+    for fold in range(n_fold):
+        trainX, trainy, valX, valy = chunk_validation_set(sidx, X, y, n_fold, fold)
+
+        theta, mu, sigma, theta_record, loss_record = train(theta_init, h, J, trainX, trainy, eta, lmbda, epoch, n_minibatch)
+
+        train_error[fold] = test(theta, h, mu, sigma, trainX, trainy)
+        val_error[fold] = test(theta, h, mu, sigma, valX, valy)
+
+    return train_error, val_error
+
+
+def choose_parameters(lmbda_list, theta_init, h, J, X, y, eta, epoch, n_fold, n_minibatch):
+    train_error_avg = np.zeros((lmbda_list.size, 1))
+    val_error_avg = np.zeros((lmbda_list.size, 1))
+
+    for i, lmbda in enumerate(lmbda_list):
+        train_error, val_error = cross_validation(theta_init, h, J, X, y, eta, lmbda, epoch, n_fold, n_minibatch)
+        train_error_avg[i] = np.mean(train_error)
+        val_error_avg[i] = np.mean(val_error)
+
+    return train_error_avg, val_error_avg

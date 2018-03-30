@@ -153,7 +153,3 @@ def gen_predict(X, mu0, mu1, cov, ratio0, ratio1):
 
 # def gaussian_pdf(mu, cov, X):
 #     return np.power(np.sqrt((2*np.pi)**n * np.linalg.det(cov)), -0.5) * np.exp(-0.5 * np.dot(np.dot(X - mu, np.linalg.pinv(cov)), (X - mu).T))
-
-
-
-    

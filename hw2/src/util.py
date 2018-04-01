@@ -151,5 +151,15 @@ def gen_predict(X, mu0, mu1, cov, ratio0, ratio1):
     b = -0.5 * np.dot(np.dot(mu1.T, cov_inv), mu1) + 0.5 * np.dot(np.dot(mu0.T, cov_inv), mu0) + np.log(ratio1/ratio0)
     return (sigmoid(np.dot(X, w) + b) > 0.5).astype(np.int) 
 
+def save_gaussian_model(g_path, mu0, mu1, cov, m0, m1):
+    np.save(g_path, np.array([mu0, mu1, cov, m0, m1]))
+    return 
+
+def load_gaussian_model(g_path):
+    return np.load(g_path)
+
+
+
+    
 # def gaussian_pdf(mu, cov, X):
 #     return np.power(np.sqrt((2*np.pi)**n * np.linalg.det(cov)), -0.5) * np.exp(-0.5 * np.dot(np.dot(X - mu, np.linalg.pinv(cov)), (X - mu).T))

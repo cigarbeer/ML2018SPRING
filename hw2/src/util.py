@@ -59,7 +59,7 @@ def gradient_descent(theta, h, J, X, y, eta, lmbda, epoch, n_minibatch):
             theta = theta - eta * adagrad
 
             loss_record.append(J(theta, h, mX, my, lmbda))
-            print('epoch:', ep, 'mini batch:', i , 'loss:', loss_record[-1])
+            # print('epoch:', ep, 'mini batch:', i , 'loss:', loss_record[-1])
 
     return theta, loss_record
 

@@ -31,8 +31,8 @@ def J(theta, h, X, y, lmbda):
     h_theta = h(theta, X)
     l2_reg_cost = lmbda * (1 / 2) * np.dot(theta[1:].T, theta[1:])
     error_cost = -np.sum(y * np.nan_to_num(np.log(h_theta)) + (1 - y) * np.nan_to_num(np.log(1 - h_theta)))
-    J = (1 / m) * (error_cost + l2_reg_cost)
-    return J 
+    return (1 / m) * (error_cost + l2_reg_cost)
+ 
 
 def gradient(theta, h, X, y, lmbda):
     m, n = X.shape

@@ -48,8 +48,9 @@ def gradient_descent(theta, h, J, X, y, lmbda, eta, n_epoch):
     for epoch in range(n_epoch): 
         gradient = J_gradient(theta, h, X, y, lmbda) 
         gradient_square_sum = gradient**2 + gradient_square_sum 
-        theta = theta - eta * gradient / np.sqrt(gradient_square_sum) 
-        print(epoch, J(theta, h, X, y, lmbda)) 
+        theta = theta - eta * gradient / np.sqrt(gradient_square_sum)
+        if epoch % 1000 == 0:
+            print(epoch, J(theta, h, X, y, lmbda)) 
 
     return theta 
 
@@ -66,10 +67,16 @@ def save_model(model_path, theta, mu, sigma):
 def load_model(model_path):
     return np.load(model_path)
 
+def read_testing_data(t_file):
+    t = pd.read_csv(t_file) 
+    return t.values
+
+
 def normalize_testing_data(t, mu, sigma):
     return (t - mu) / sigma 
     
 def predict(theta, h, t):
+    t = add_bias_term(t) 
     pred = h(theta, t) > 0.5 
     return pred.astype(np.int) 
 

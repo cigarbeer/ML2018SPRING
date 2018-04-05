@@ -1,6 +1,7 @@
 import numpy as np 
 import pandas as pd 
 import sys 
+import best_setting as st 
 
 
 def read_training_data(X_file, y_file):
@@ -54,11 +55,13 @@ def gradient_descent(theta, h, J, X, y, lmbda, eta, n_epoch):
 
     return theta 
 
-
 def train(h, J, X, y, lmbda, eta, n_epoch):
+    m, n = X.shape 
     X = add_bias_term(X) 
     theta_init = initialize_theta(X, y)
-    theta = gradient_descent(theta_init, h, J, X, y, lmbda, eta, n_epoch) 
+    theta = gradient_descent(theta_init, h, J, X, y, lmbda, eta=0.15, n_epoch=10000) 
+    theta = gradient_descent(theta, h, J, X, y, lmbda, eta=1e-4, n_epoch=30000)
+
     return theta 
 
 def save_model(model_path, theta, mu, sigma):
@@ -85,3 +88,14 @@ def write_prediction(prediction_path, pred):
     df.index = df.index + 1
     df.to_csv(prediction_path, index_label='id')
     return df 
+
+
+if __name__ == '__main__':
+    t_file = sys.argv[1]
+    output_file = sys.argv[2]
+
+    t = read_testing_data(t_file)
+    theta, mu, sigma = load_model(st.BEST_MODEL_PATH)
+    t = normalize_testing_data(t, mu, sigma)
+    p = predict(theta, h, t)
+    write_prediction(output_file, p)

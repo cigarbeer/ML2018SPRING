@@ -41,7 +41,6 @@ def read_testing_data(file_name):
     return ids, t
 
 def preprocess_data(X):
-    # X = X / 255 
     mu = np.mean(X, axis=1) 
     sigma = np.std(X, axis=1) 
     X = ((X.T - mu) / sigma).T
@@ -106,6 +105,7 @@ def cnn_output(model, output_size, units, n_layers, dropout_rate):
             bias_initializer='zeros'
         ))
         model.add(Activation('relu'))
+        model.add(BatchNormalization()) 
         model.add(Dropout(
             rate=dropout_rate
         ))
@@ -130,7 +130,7 @@ def compile_model(model):
 def fit_model(model, X, y, epochs, batch_size, model_saving_path):
     callbacks = [
         ModelCheckpoint(model_saving_path+'weights.{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5', monitor='val_loss', verbose=1), 
-        EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=3, verbose=1)
+        EarlyStopping(monitor='val_acc', min_delta=1e-4, patience=3, verbose=1)
     ]
     model.fit(X, y, epochs=epochs, batch_size=batch_size, validation_split=0.2, shuffle=True, callbacks=callbacks, verbose=1)
     return model 

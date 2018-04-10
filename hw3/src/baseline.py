@@ -69,15 +69,15 @@ def get_training_data_generator(X):
     training_data_generator = ImageDataGenerator(
         samplewise_center=True, 
         samplewise_std_normalization=True, 
-        featurewise_center=False, 
-        featurewise_std_normalization=False, 
+        featurewise_center=True, 
+        featurewise_std_normalization=True, 
         zca_whitening=False, 
         zca_epsilon=1e-06, 
-        rotation_range=20.0, 
-        width_shift_range=0.2, 
-        height_shift_range=0.2, 
-        shear_range=0.1, 
-        zoom_range=0.1, 
+        rotation_range=10.0, 
+        width_shift_range=0.05, 
+        height_shift_range=0.05, 
+        shear_range=0.0, 
+        zoom_range=0.05, 
         channel_shift_range=0.0, 
         fill_mode='nearest', 
         cval=0.0, 
@@ -95,8 +95,8 @@ def get_testing_data_generator(t):
     testing_data_generator = ImageDataGenerator(
         samplewise_center=True, 
         samplewise_std_normalization=True, 
-        featurewise_center=False, 
-        featurewise_std_normalization=False, 
+        featurewise_center=True, 
+        featurewise_std_normalization=True, 
         zca_whitening=False, 
         zca_epsilon=1e-06, 
         rotation_range=0.0, 
@@ -217,8 +217,10 @@ def fit_generator(model, X, y, epochs, batch_size, model_saving_path):
     m_train, *n = X_train.shape 
     m_val, *n = X_val.shape 
 
+    # training_data_generator = get_training_data_generator(X_train).flow(X_train, y_train, batch_size=batch_size, shuffle=True, seed=SEED, save_to_dir='./aug/', save_prefix='train/', save_format='png')
+    # validation_data_generator = get_validation_data_generator(X_train).flow(X_val, y_val, batch_size=batch_size, shuffle=True, seed=SEED, save_to_dir='./aug/', save_prefix='val/', save_format='png')
     training_data_generator = get_training_data_generator(X_train).flow(X_train, y_train, batch_size=batch_size, shuffle=True, seed=SEED)
-    validation_data_generator = get_validation_data_generator(X_val).flow(X_val, y_val, batch_size=batch_size, shuffle=True, seed=SEED)
+    validation_data_generator = get_validation_data_generator(X_train).flow(X_val, y_val, batch_size=batch_size, shuffle=True, seed=SEED)
 
     model.fit_generator(
         generator=training_data_generator, 

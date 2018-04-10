@@ -214,8 +214,8 @@ def fit_generator(model, X, y, epochs, batch_size, model_saving_path):
     ]
 
     (X_train, y_train), (X_val, y_val) = split_validation_set(X, y, VALIDATION_SPLIT) 
-    m_train, n = X_train.shape 
-    m_val, n = X_val.shape 
+    m_train, *n = X_train.shape 
+    m_val, *n = X_val.shape 
 
     training_data_generator = get_training_data_generator(X_train).flow(X_train, y_train, batch_size=batch_size, shuffle=True, seed=SEED)
     validation_data_generator = get_validation_data_generator(X_val).flow(X_val, y_val, batch_size=batch_size, shuffle=True, seed=SEED)

@@ -213,7 +213,7 @@ def fit_generator(model, X, y, epochs, batch_size, model_saving_path):
         EarlyStopping(monitor='val_acc', min_delta=1e-4, patience=4, verbose=1)
     ]
 
-    (X_train, y_train), (X_val, y_val) = split_validation_set(X, y) 
+    (X_train, y_train), (X_val, y_val) = split_validation_set(X, y, VALIDATION_SPLIT) 
     m_train, n = X_train.shape 
     m_val, n = X_val.shape 
 

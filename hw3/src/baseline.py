@@ -46,8 +46,8 @@ def read_raw_testing_data(file_name):
     t = np.stack(feature, axis=0)
     return ids, t
 
-def read_selected_training_data(file_name):
-    return np.load(file_name) 
+def read_selected_training_data(X_file, y_file):
+    return np.load(X_file), np.load(y_file)  
 
 def preprocess_training_data(X):
     X = X.reshape((-1, *INPUT_SHAPE))

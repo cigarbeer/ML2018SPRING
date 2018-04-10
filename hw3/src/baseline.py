@@ -1,5 +1,6 @@
+SEED = 0 
 import numpy as np 
-np.random.seed(0)
+np.random.seed(SEED)
 import pandas as pd 
 
 
@@ -22,13 +23,15 @@ from keras.utils import np_utils
 from keras.callbacks import EarlyStopping 
 from keras.callbacks import ModelCheckpoint 
 
+VALIDATION_SPLIT = 0.2 
+BATCH_SIZE = 128 
 
 INPUT_SHAPE = (48, 48, 1)
 OUTPUT_SIZE = 7 
 FLATTEN_SIZE = 48 * 48
 
 
-def read_training_data(file_name):
+def read_raw_training_data(file_name):
     df = pd.read_csv(file_name) 
     label = df.label 
     feature = df.feature.apply(np.fromstring, sep=' ', dtype=np.float32)
@@ -36,19 +39,85 @@ def read_training_data(file_name):
     y = np_utils.to_categorical(label)
     return X, y 
 
-def read_testing_data(file_name):
+def read_raw_testing_data(file_name):
     df = pd.read_csv(file_name) 
     ids = df.id.values
     feature = df.feature.apply(np.fromstring, sep=' ', dtype=np.float32)
     t = np.stack(feature, axis=0)
     return ids, t
 
-def preprocess_data(X):
-    mu = np.mean(X, axis=1) 
-    sigma = np.std(X, axis=1) 
-    X = ((X.T - mu) / sigma).T
+def read_selected_training_data(file_name):
+    return np.load(file_name) 
+
+def preprocess_training_data(X):
     X = X.reshape((-1, *INPUT_SHAPE))
     return X 
+
+def preprocess_testing_data(t):
+    return preprocess_training_data(t) 
+
+def split_validation_set(X, y, rate):
+    m, n = X.shape 
+    n_train = int(rate*m)
+    X_train = X[:n_train]
+    y_train = y[:n_train] 
+    X_val = X[n_train:]
+    y_val = y[n_train:]
+    return (X_train, y_train), (X_val, y_val) 
+
+def get_training_data_generator(X):
+    training_data_generator = ImageDataGenerator(
+        samplewise_center=True, 
+        samplewise_std_normalization=True, 
+        featurewise_center=False, 
+        featurewise_std_normalization=False, 
+        zca_whitening=False, 
+        zca_epsilon=1e-06, 
+        rotation_range=20.0, 
+        width_shift_range=0.2, 
+        height_shift_range=0.2, 
+        shear_range=0.1, 
+        zoom_range=0.1, 
+        channel_shift_range=0.0, 
+        fill_mode='nearest', 
+        cval=0.0, 
+        horizontal_flip=True, 
+        vertical_flip=False, 
+        rescale=1/255, 
+        preprocessing_function=None, 
+        data_format='channels_last', 
+    )
+    training_data_generator.fit(X, augment=False, rounds=1, seed=SEED)
+    return training_data_generator
+
+
+def get_testing_data_generator(t):
+    testing_data_generator = ImageDataGenerator(
+        samplewise_center=True, 
+        samplewise_std_normalization=True, 
+        featurewise_center=False, 
+        featurewise_std_normalization=False, 
+        zca_whitening=False, 
+        zca_epsilon=1e-06, 
+        rotation_range=0.0, 
+        width_shift_range=0.0, 
+        height_shift_range=0.0, 
+        shear_range=0.0, 
+        zoom_range=0.0, 
+        channel_shift_range=0.0, 
+        fill_mode='nearest', 
+        cval=0.0, 
+        horizontal_flip=False, 
+        vertical_flip=False, 
+        rescale=1/255, 
+        preprocessing_function=None, 
+        data_format='channels_last'
+    )
+    testing_data_generator.fit(t, augment=False, rounds=1, seed=SEED)
+    return testing_data_generator
+
+def get_validation_data_generator(V):
+    return get_testing_data_generator(V)
 
 def write_prediction(file_name, prediction):
     df = pd.DataFrame(columns=['label'], data=prediction)
@@ -69,6 +138,7 @@ def cnn_input(input_shape, filters, kernel_size):
         bias_initializer='zeros', 
         input_shape=input_shape 
     ))
+    model.add(Activation('relu'))
     model.add(BatchNormalization())
     return model 
 
@@ -98,11 +168,14 @@ def cnn_hidden(model, filters, kernel_size, n_layers, dropout_rate):
     ))
     return model 
 
-def cnn_output(model, output_size, units, n_layers, dropout_rate): 
+def cnn_to_nn(model): 
     model.add(Flatten())
+    return model 
+
+def nn(model, units, n_layers, dropout_rate):
     for n in range(n_layers):
         model.add(Dense(
-            units=units, 
+            units=units,
             use_bias=True, 
             kernel_initializer='glorot_uniform', 
             bias_initializer='zeros'
@@ -112,6 +185,9 @@ def cnn_output(model, output_size, units, n_layers, dropout_rate):
         model.add(Dropout(
             rate=dropout_rate
         ))
+    return model 
+
+def nn_output(model, output_size):
     model.add(Dense(
         units=output_size, 
         activation='softmax', 
@@ -120,6 +196,7 @@ def cnn_output(model, output_size, units, n_layers, dropout_rate):
         bias_initializer='zeros'
     ))
     return model 
+
 
 def compile_model(model):
     adam = Adam(lr=1e-4) 
@@ -130,20 +207,48 @@ def compile_model(model):
     )
     return model 
 
-def fit_model(model, X, y, epochs, batch_size, model_saving_path):
+def fit_generator(model, X, y, epochs, batch_size, model_saving_path):
     callbacks = [
         ModelCheckpoint(model_saving_path+'weights.{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5', monitor='val_loss', verbose=1), 
         EarlyStopping(monitor='val_acc', min_delta=1e-4, patience=4, verbose=1)
     ]
-    model.fit(X, y, epochs=epochs, batch_size=batch_size, validation_split=0.2, shuffle=True, callbacks=callbacks, verbose=1)
+
+    (X_train, y_train), (X_val, y_val) = split_validation_set(X, y) 
+    m_train, n = X_train.shape 
+    m_val, n = X_val.shape 
+
+    training_data_generator = get_training_data_generator(X_train).flow(X_train, y_train, batch_size=batch_size, shuffle=True, seed=SEED)
+    validation_data_generator = get_validation_data_generator(X_val).flow(X_val, y_val, batch_size=batch_size, shuffle=True, seed=SEED)
+
+    model.fit_generator(
+        generator=training_data_generator, 
+        steps_per_epoch=int(m_train/batch_size)+1, 
+        epochs=epochs, 
+        verbose=1, 
+        callbacks=callbacks, 
+        validation_data=validation_data_generator, 
+        validation_steps=int(m_val/batch_size)+1, 
+        class_weight=None, 
+        max_queue_size=10, 
+        workers=1, 
+        use_multiprocessing=False, 
+        shuffle=True, 
+        initial_epoch=0
+    )
     return model 
 
-def predict(model, t, batch_size): 
-    prob = model.predict(t, batch_size=batch_size, verbose=1)
-    pred = np.argmax(pred, axis=1)
-    return pred 
+# def predict(model, generator, t, batch_size, )
 
-def write_prediction(file_name, prediction):
-    df = pd.DataFrame(columns=['label'], data=prediction)
-    df.to_csv(file_name, index=True, index_label='id')
-    return df 
+
+# def fit_model(model, X, y, epochs, batch_size, model_saving_path):
+#     callbacks = [
+#         ModelCheckpoint(model_saving_path+'weights.{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5', monitor='val_loss', verbose=1), 
+#         EarlyStopping(monitor='val_acc', min_delta=1e-4, patience=4, verbose=1)
+#     ]
+#     model.fit(X, y, epochs=epochs, batch_size=batch_size, validation_split=0.2, shuffle=True, callbacks=callbacks, verbose=1)
+#     return model 
+
+# def predict(model, t, batch_size): 
+#     prob = model.predict(t, batch_size=batch_size, verbose=1)
+#     pred = np.argmax(prob, axis=1)
+#     return pred 

@@ -2,6 +2,9 @@ import numpy as np
 np.random.seed(0)
 import pandas as pd 
 
+
+from keras.preprocessing.image import ImageDataGenerator 
+
 from keras.models import Sequential 
 
 from keras.layers import Conv2D 
@@ -130,7 +133,7 @@ def compile_model(model):
 def fit_model(model, X, y, epochs, batch_size, model_saving_path):
     callbacks = [
         ModelCheckpoint(model_saving_path+'weights.{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5', monitor='val_loss', verbose=1), 
-        EarlyStopping(monitor='val_acc', min_delta=1e-4, patience=3, verbose=1)
+        EarlyStopping(monitor='val_acc', min_delta=1e-4, patience=4, verbose=1)
     ]
     model.fit(X, y, epochs=epochs, batch_size=batch_size, validation_split=0.2, shuffle=True, callbacks=callbacks, verbose=1)
     return model 

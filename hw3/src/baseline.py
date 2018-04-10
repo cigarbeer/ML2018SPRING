@@ -58,7 +58,7 @@ def preprocess_testing_data(t):
 
 def split_validation_set(X, y, rate):
     m, *n = X.shape 
-    n_train = int(rate*m)
+    n_train = int((1 - rate) * m)
     X_train = X[:n_train]
     y_train = y[:n_train] 
     X_val = X[n_train:]
@@ -232,7 +232,6 @@ def fit_generator(model, X, y, epochs, batch_size, model_saving_path):
         max_queue_size=10, 
         workers=1, 
         use_multiprocessing=False, 
-        shuffle=True, 
         initial_epoch=0
     )
     return model 

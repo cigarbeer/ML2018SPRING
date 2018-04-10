@@ -57,7 +57,7 @@ def preprocess_testing_data(t):
     return preprocess_training_data(t) 
 
 def split_validation_set(X, y, rate):
-    m, n = X.shape 
+    m, *n = X.shape 
     n_train = int(rate*m)
     X_train = X[:n_train]
     y_train = y[:n_train] 

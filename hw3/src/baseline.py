@@ -191,6 +191,7 @@ def net(input_shape, output_shape):
     model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
     model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
     model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2) 
+    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2) 
     model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2) 
     model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2) 
 

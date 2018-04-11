@@ -8,13 +8,14 @@ from keras.preprocessing.image import ImageDataGenerator
 
 from keras.models import Sequential 
 
+from keras.layers import Reshape 
 from keras.layers import Conv2D 
 from keras.layers import MaxPooling2D 
 from keras.layers import Activation 
 from keras.layers import BatchNormalization 
 from keras.layers import Dropout 
 from keras.layers import Flatten 
-from keras.layers import Dense 
+from keras.layers import Dense
 
 from keras.optimizers import Adam 
 
@@ -26,9 +27,10 @@ from keras.callbacks import ModelCheckpoint
 VALIDATION_SPLIT = 0.2 
 BATCH_SIZE = 128 
 
-INPUT_SHAPE = (48, 48, 1)
-OUTPUT_SIZE = 7 
-FLATTEN_SIZE = 48 * 48
+FLATTEN_IMAGE_SIZE = 48 * 48
+FLATTEN_IMAGE_SHAPE = (FLATTEN_IMAGE_SIZE,)
+IMAGE_SHAPE = (48, 48, 1)
+OUTPUT_CLASSES_NUM = 7 
 
 
 def read_raw_training_data(file_name):
@@ -52,7 +54,7 @@ def read_selected_training_data(X_file, y_file):
 def preprocess_training_data(X):
     X = samplewise_normalization(X) 
     X = featurewise_normalize(X) 
-    X = X.reshape((-1, *INPUT_SHAPE))
+    X = X.reshape((-1, *IMAGE_SHAPE))
     return X 
 
 def preprocess_testing_data(t):
@@ -126,26 +128,11 @@ def write_prediction(file_name, prediction):
     df.to_csv(file_name, index=True, index_label='id')
     return df 
 
-
-def cnn_input(input_shape, filters, kernel_size):
-    model = Sequential() 
-    model.add(Conv2D(
-        filters=filters, 
-        kernel_size=kernel_size, 
-        strides=(1, 1), 
-        padding='same', 
-        data_format='channels_last', 
-        use_bias=True, 
-        kernel_initializer='glorot_uniform', 
-        bias_initializer='zeros', 
-        input_shape=input_shape 
-    ))
-    model.add(Activation('relu'))
-    model.add(BatchNormalization())
+def input_block(model, input_shape, output_shape):
+    model.add(Reshape(target_shape=output_shape, input_shape=input_shape))
     return model 
 
-
-def cnn_hidden(model, filters, kernel_size, n_layers, dropout_rate):
+def cnn_block(model, filters, kernel_size, n_layers, dropout_rate):
     for n in range(n_layers):
         model.add(Conv2D(
             filters=filters, 
@@ -158,7 +145,7 @@ def cnn_hidden(model, filters, kernel_size, n_layers, dropout_rate):
             bias_initializer='zeros'
         ))
         model.add(Activation('relu'))
-        model.add(BatchNormalization()) 
+        model.add(BatchNormalization())
     model.add(MaxPooling2D(
         pool_size=(2, 2), 
         strides=(2, 2), 
@@ -170,11 +157,7 @@ def cnn_hidden(model, filters, kernel_size, n_layers, dropout_rate):
     ))
     return model 
 
-def cnn_to_nn(model): 
-    model.add(Flatten())
-    return model 
-
-def nn(model, units, n_layers, dropout_rate):
+def nn_block(model, units, n_layers, dropout_rate):
     for n in range(n_layers):
         model.add(Dense(
             units=units,
@@ -189,9 +172,9 @@ def nn(model, units, n_layers, dropout_rate):
         ))
     return model 
 
-def nn_output(model, output_size):
+def output_block(model, output_shape):
     model.add(Dense(
-        units=output_size, 
+        units=output_shape, 
         activation='softmax', 
         use_bias=True, 
         kernel_initializer='glorot_uniform', 
@@ -199,6 +182,24 @@ def nn_output(model, output_size):
     ))
     return model 
 
+def net(input_shape, output_shape):
+    model = Sequential()
+    model = input_block(model, input_shape=IMAGE_SHAPE, output_shape=IMAGE_SHAPE)
+
+    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
+    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
+    model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
+    model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2) 
+    model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2) 
+    model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2)
+
+    model.add(Flatten())
+
+    model = nn_block(model, units=FLATTEN_IMAGE_SIZE, n_layers=2, dropout_rate=0.2) 
+
+    model = output_block(model, output_shape=output_shape)
+
+    return model 
 
 def compile_model(model):
     adam = Adam(lr=1e-4) 

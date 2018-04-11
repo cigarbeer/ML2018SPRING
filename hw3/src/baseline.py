@@ -85,7 +85,7 @@ def get_training_data_generator(X):
         cval=0.0, 
         horizontal_flip=True, 
         vertical_flip=False, 
-        rescale=1.0/255, 
+        rescale=None, 
         preprocessing_function=None, 
         data_format='channels_last', 
     )
@@ -111,7 +111,7 @@ def get_testing_data_generator(t):
         cval=0.0, 
         horizontal_flip=False, 
         vertical_flip=False, 
-        rescale=1.0/255, 
+        rescale=None, 
         preprocessing_function=None, 
         data_format='channels_last'
     )

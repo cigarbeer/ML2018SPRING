@@ -187,16 +187,16 @@ def net(input_shape, output_shape):
     model = Sequential()
     model = input_block(model, input_shape=input_shape, output_shape=IMAGE_SHAPE)
 
-    model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=2, dropout_rate=0.5) 
-    model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=2, dropout_rate=0.5) 
-    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=3, dropout_rate=0.5) 
-    model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.5) 
-    model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.5) 
-    model = cnn_block(model, filters=512, kernel_size=(3, 3), n_layers=3, dropout_rate=0.5) 
+    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
+    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
+    model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
+    model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2) 
+    model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2) 
+    model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2) 
 
     model.add(Flatten())
 
-    model = nn_block(model, units=FLATTEN_IMAGE_SIZE, n_layers=3, dropout_rate=0.5) 
+    model = nn_block(model, units=FLATTEN_IMAGE_SIZE, n_layers=2, dropout_rate=0.2) 
 
     model = output_block(model, output_shape=output_shape)
 

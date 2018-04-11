@@ -52,6 +52,7 @@ def read_selected_training_data(X_file, y_file):
     return np.load(X_file), np.load(y_file)  
 
 def preprocess_training_data(X):
+    X[:, 0] += 1e-4 
     X = samplewise_normalization(X) 
     X = featurewise_normalize(X) 
     X = X.reshape((-1, *IMAGE_SHAPE))
@@ -186,16 +187,18 @@ def net(input_shape, output_shape):
     model = Sequential()
     model = input_block(model, input_shape=input_shape, output_shape=IMAGE_SHAPE)
 
-    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
-    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
-    model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
-    model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2) 
-    model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2) 
-    model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2)
+    model = cnn_block(model, filters=32, kernel_size=(3, 3), n_layers=2, dropout_rate=0.5) 
+    model = cnn_block(model, filters=32, kernel_size=(3, 3), n_layers=2, dropout_rate=0.5) 
+    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.5) 
+    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.5) 
+    model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=3, dropout_rate=0.5) 
+    model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=3, dropout_rate=0.5) 
+    model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.5) 
+    model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.5)
 
     model.add(Flatten())
 
-    model = nn_block(model, units=FLATTEN_IMAGE_SIZE, n_layers=2, dropout_rate=0.2) 
+    model = nn_block(model, units=FLATTEN_IMAGE_SIZE, n_layers=3, dropout_rate=0.5) 
 
     model = output_block(model, output_shape=output_shape)
 
@@ -213,7 +216,7 @@ def compile_model(model):
 def fit_generator(model, X, y, epochs, batch_size, model_saving_path):
     callbacks = [
         ModelCheckpoint(model_saving_path+'weights.{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5', monitor='val_loss', verbose=1), 
-        EarlyStopping(monitor='val_acc', min_delta=1e-4, patience=10, verbose=1)
+        EarlyStopping(monitor='val_acc', min_delta=1e-4, patience=5, verbose=1)
     ]
 
     (X_train, y_train), (X_val, y_val) = split_validation_set(X, y, VALIDATION_SPLIT) 
@@ -241,21 +244,18 @@ def fit_generator(model, X, y, epochs, batch_size, model_saving_path):
     )
     return model 
 
-# def predict(model, generator, t, batch_size, )
-
-
 def fit_model(model, X, y, epochs, batch_size, model_saving_path):
     callbacks = [
         ModelCheckpoint(model_saving_path+'weights.{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5', monitor='val_loss', verbose=1), 
-        EarlyStopping(monitor='val_acc', min_delta=1e-4, patience=4, verbose=1)
+        EarlyStopping(monitor='val_acc', min_delta=1e-4, patience=5, verbose=1)
     ]
-    model.fit(X, y, epochs=epochs, batch_size=batch_size, validation_split=0.2, shuffle=True, callbacks=callbacks, verbose=1)
+    model.fit(X, y, epochs=epochs, batch_size=batch_size, validation_split=VALIDATION_SPLIT, shuffle=True, callbacks=callbacks, verbose=1)
     return model 
 
-# def predict(model, t, batch_size): 
-#     prob = model.predict(t, batch_size=batch_size, verbose=1)
-#     pred = np.argmax(prob, axis=1)
-#     return pred 
+def predict(model, t, batch_size): 
+    prob = model.predict(t, batch_size=batch_size, verbose=1)
+    pred = np.argmax(prob, axis=1)
+    return pred 
 
 def featurewise_normalize(X):
     mu = np.mean(X, axis=0) 

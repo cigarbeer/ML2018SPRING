@@ -184,7 +184,7 @@ def output_block(model, output_shape):
 
 def net(input_shape, output_shape):
     model = Sequential()
-    model = input_block(model, input_shape=IMAGE_SHAPE, output_shape=IMAGE_SHAPE)
+    model = input_block(model, input_shape=input_shape, output_shape=IMAGE_SHAPE)
 
     model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
     model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
@@ -202,7 +202,7 @@ def net(input_shape, output_shape):
     return model 
 
 def compile_model(model):
-    adam = Adam(lr=1e-4) 
+    adam = Adam(lr=1e-4, amsgrad=True) 
     model.compile(
         optimizer=adam, 
         loss='categorical_crossentropy',

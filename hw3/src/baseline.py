@@ -187,17 +187,17 @@ def net(input_shape, output_shape):
     model = Sequential()
     model = input_block(model, input_shape=input_shape, output_shape=IMAGE_SHAPE)
 
-    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
-    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
-    model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=2, dropout_rate=0.2) 
-    model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2) 
-    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2) 
-    model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2) 
-    model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.2) 
+    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.25) 
+    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.25) 
+    model = cnn_block(model, filters=64, kernel_size=(3, 3), n_layers=2, dropout_rate=0.25) 
+    model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=2, dropout_rate=0.25) 
+    model = cnn_block(model, filters=128, kernel_size=(3, 3), n_layers=3, dropout_rate=0.25) 
+    model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.25) 
+    model = cnn_block(model, filters=256, kernel_size=(3, 3), n_layers=3, dropout_rate=0.25) 
 
     model.add(Flatten())
 
-    model = nn_block(model, units=FLATTEN_IMAGE_SIZE, n_layers=2, dropout_rate=0.2) 
+    model = nn_block(model, units=FLATTEN_IMAGE_SIZE, n_layers=2, dropout_rate=0.25) 
 
     model = output_block(model, output_shape=output_shape)
 
@@ -245,8 +245,9 @@ def fit_generator(model, X, y, epochs, batch_size, model_saving_path):
 
 def fit_model(model, X, y, epochs, batch_size, model_saving_path):
     callbacks = [
-        ModelCheckpoint(model_saving_path+'weights.{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5', monitor='val_loss', verbose=1), 
-        EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=5, verbose=1)
+        ModelCheckpoint(model_saving_path+'best.hdf5', monitor='val_loss', save_best_only=True, verbose=1), 
+        # ModelCheckpoint(model_saving_path+'weights.{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5', monitor='val_loss', save_best_only=True, verbose=1), 
+        EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=10, verbose=1)
     ]
     model.fit(X, y, epochs=epochs, batch_size=batch_size, validation_split=VALIDATION_SPLIT, shuffle=True, callbacks=callbacks, verbose=1)
     return model 

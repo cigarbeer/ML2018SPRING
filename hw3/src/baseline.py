@@ -50,6 +50,8 @@ def read_selected_training_data(X_file, y_file):
     return np.load(X_file), np.load(y_file)  
 
 def preprocess_training_data(X):
+    X = samplewise_normalization(X) 
+    X = featurewise_normalize(X) 
     X = X.reshape((-1, *INPUT_SHAPE))
     return X 
 
@@ -67,10 +69,10 @@ def split_validation_set(X, y, rate):
 
 def get_training_data_generator(X):
     training_data_generator = ImageDataGenerator(
-        samplewise_center=True, 
-        samplewise_std_normalization=True, 
-        featurewise_center=True, 
-        featurewise_std_normalization=True, 
+        samplewise_center=False, 
+        samplewise_std_normalization=False, 
+        featurewise_center=False, 
+        featurewise_std_normalization=False, 
         zca_whitening=False, 
         zca_epsilon=1e-06, 
         rotation_range=10.0, 
@@ -83,7 +85,7 @@ def get_training_data_generator(X):
         cval=0.0, 
         horizontal_flip=True, 
         vertical_flip=False, 
-        rescale=1/255, 
+        rescale=1.0/255, 
         preprocessing_function=None, 
         data_format='channels_last', 
     )
@@ -93,10 +95,10 @@ def get_training_data_generator(X):
 
 def get_testing_data_generator(t):
     testing_data_generator = ImageDataGenerator(
-        samplewise_center=True, 
-        samplewise_std_normalization=True, 
-        featurewise_center=True, 
-        featurewise_std_normalization=True, 
+        samplewise_center=False, 
+        samplewise_std_normalization=False, 
+        featurewise_center=False, 
+        featurewise_std_normalization=False, 
         zca_whitening=False, 
         zca_epsilon=1e-06, 
         rotation_range=0.0, 
@@ -109,7 +111,7 @@ def get_testing_data_generator(t):
         cval=0.0, 
         horizontal_flip=False, 
         vertical_flip=False, 
-        rescale=1/255, 
+        rescale=1.0/255, 
         preprocessing_function=None, 
         data_format='channels_last'
     )
@@ -241,15 +243,27 @@ def fit_generator(model, X, y, epochs, batch_size, model_saving_path):
 # def predict(model, generator, t, batch_size, )
 
 
-# def fit_model(model, X, y, epochs, batch_size, model_saving_path):
-#     callbacks = [
-#         ModelCheckpoint(model_saving_path+'weights.{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5', monitor='val_loss', verbose=1), 
-#         EarlyStopping(monitor='val_acc', min_delta=1e-4, patience=4, verbose=1)
-#     ]
-#     model.fit(X, y, epochs=epochs, batch_size=batch_size, validation_split=0.2, shuffle=True, callbacks=callbacks, verbose=1)
-#     return model 
+def fit_model(model, X, y, epochs, batch_size, model_saving_path):
+    callbacks = [
+        ModelCheckpoint(model_saving_path+'weights.{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5', monitor='val_loss', verbose=1), 
+        EarlyStopping(monitor='val_acc', min_delta=1e-4, patience=4, verbose=1)
+    ]
+    model.fit(X, y, epochs=epochs, batch_size=batch_size, validation_split=0.2, shuffle=True, callbacks=callbacks, verbose=1)
+    return model 
 
 # def predict(model, t, batch_size): 
 #     prob = model.predict(t, batch_size=batch_size, verbose=1)
 #     pred = np.argmax(prob, axis=1)
 #     return pred 
+
+def featurewise_normalize(X):
+    mu = np.mean(X, axis=0) 
+    sigma = np.std(X, axis=0)
+    X = (X - mu) / sigma 
+    return X 
+
+def samplewise_normalization(X):
+    mu = np.mean(X, axis=1) 
+    sigma = np.std(X, axis=1)
+    X = ((X.T - mu) / sigma).T  
+    return X 

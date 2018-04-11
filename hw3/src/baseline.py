@@ -214,8 +214,9 @@ def compile_model(model):
 
 def fit_generator(model, X, y, epochs, batch_size, model_saving_path):
     callbacks = [
-        ModelCheckpoint(model_saving_path+'weights.{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5', monitor='val_loss', verbose=1), 
-        EarlyStopping(monitor='val_acc', min_delta=1e-4, patience=5, verbose=1)
+        ModelCheckpoint(model_saving_path+'best.hdf5', monitor='val_loss', save_best_only=True, verbose=1), 
+        # ModelCheckpoint(model_saving_path+'weights.{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5', monitor='val_loss', verbose=1), 
+        EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=10, verbose=1)
     ]
 
     (X_train, y_train), (X_val, y_val) = split_validation_set(X, y, VALIDATION_SPLIT) 

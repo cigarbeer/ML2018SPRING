@@ -265,7 +265,7 @@ def predict(model, t, batch_size):
 
 
 if __name__ == '__main__': 
-    X, y = read_raw_training_data('../../model/train.csv', '../../model/test.csv') 
+    X, y = read_raw_training_data('../../model/train.csv') 
     X = preprocess_training_data(X)
     model = net(input_shape=IMAGE_SHAPE, output_shape=OUTPUT_CLASSES_NUM)
     model = compile_model(model)

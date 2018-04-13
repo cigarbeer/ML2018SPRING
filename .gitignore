@@ -6,3 +6,4 @@ dataset/
 model/ 
 results/
 *.backup
+*.hdf5 

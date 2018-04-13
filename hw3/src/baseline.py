@@ -52,7 +52,7 @@ def read_selected_training_data(X_file, y_file):
     return np.load(X_file), np.load(y_file)  
 
 def preprocess_training_data(X):
-    X = 1.0 / 255
+    X = X / 255 
     # X[:, 0] += 1e-4 
     # X = samplewise_normalization(X) 
     # X = featurewise_normalize(X) 

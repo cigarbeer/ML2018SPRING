@@ -145,7 +145,7 @@ def cnn_block(model, filters, kernel_size, n_layers, dropout_rate):
             kernel_initializer='glorot_uniform', 
             bias_initializer='zeros'
         ))
-        model.add(Activation('relu'))
+        model.add(Activation('selu'))
         model.add(BatchNormalization())
     model.add(MaxPooling2D(
         pool_size=(2, 2), 
@@ -166,7 +166,7 @@ def nn_block(model, units, n_layers, dropout_rate):
             kernel_initializer='glorot_uniform', 
             bias_initializer='zeros'
         ))
-        model.add(Activation('relu'))
+        model.add(Activation('selu'))
         model.add(BatchNormalization()) 
         model.add(Dropout(
             rate=dropout_rate

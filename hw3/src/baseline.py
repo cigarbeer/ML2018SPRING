@@ -56,7 +56,7 @@ def preprocess_training_data(X):
     # X[:, 0] += 1e-4 
     # X = samplewise_normalization(X) 
     # X = featurewise_normalize(X) 
-    # X = X.reshape((-1, *IMAGE_SHAPE))
+    X = X.reshape((-1, *IMAGE_SHAPE))
     return X 
 
 def preprocess_testing_data(t):

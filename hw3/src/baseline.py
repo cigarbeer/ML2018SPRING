@@ -25,7 +25,7 @@ from keras.callbacks import EarlyStopping
 from keras.callbacks import ModelCheckpoint 
 
 VALIDATION_SPLIT = 0.2 
-BATCH_SIZE = 128 
+BATCH_SIZE = 32 
 
 FLATTEN_IMAGE_SIZE = 48 * 48
 FLATTEN_IMAGE_SHAPE = (FLATTEN_IMAGE_SIZE,)
@@ -52,10 +52,11 @@ def read_selected_training_data(X_file, y_file):
     return np.load(X_file), np.load(y_file)  
 
 def preprocess_training_data(X):
-    X[:, 0] += 1e-4 
-    X = samplewise_normalization(X) 
-    X = featurewise_normalize(X) 
-    X = X.reshape((-1, *IMAGE_SHAPE))
+    X = 1.0 / 255
+    # X[:, 0] += 1e-4 
+    # X = samplewise_normalization(X) 
+    # X = featurewise_normalize(X) 
+    # X = X.reshape((-1, *IMAGE_SHAPE))
     return X 
 
 def preprocess_testing_data(t):
@@ -200,7 +201,7 @@ def net(input_shape, output_shape):
 
     model.add(Flatten())
 
-    model = nn_block(model, units=512, n_layers=2, dropout_rate=0.25) 
+    model = nn_block(model, units=512, n_layers=2, dropout_rate=0.5) 
     # model = nn_block(model, units=FLATTEN_IMAGE_SIZE, n_layers=2, dropout_rate=0.25) 
 
     model = output_block(model, output_shape=output_shape)
@@ -258,6 +259,7 @@ def fit_model(model, X, y, epochs, batch_size, model_saving_path):
     return model 
 
 def predict(model, t, batch_size): 
+    t = preprocess_testing_data(t)
     prob = model.predict(t, batch_size=batch_size, verbose=1)
     pred = np.argmax(prob, axis=1)
     return pred 
@@ -266,7 +268,7 @@ def featurewise_normalize(X):
     mu = np.mean(X, axis=0) 
     sigma = np.std(X, axis=0)
     X = (X - mu) / sigma 
-    return X 
+    return X, mu. sigma 
 
 def samplewise_normalization(X):
     mu = np.mean(X, axis=1) 

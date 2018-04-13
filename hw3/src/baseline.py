@@ -231,7 +231,7 @@ def fit_generator(model, X, y, epochs, batch_size, model_saving_path):
     # training_data_generator = get_training_data_generator(X_train).flow(X_train, y_train, batch_size=batch_size, shuffle=True, seed=SEED, save_to_dir='./aug/', save_prefix='train/', save_format='png')
     # validation_data_generator = get_validation_data_generator(X_train).flow(X_val, y_val, batch_size=batch_size, shuffle=True, seed=SEED, save_to_dir='./aug/', save_prefix='val/', save_format='png')
     training_data_generator = get_training_data_generator(X_train).flow(X_train, y_train, batch_size=batch_size, shuffle=True, seed=SEED)
-    validation_data_generator = get_validation_data_generator(X_train).flow(X_val, y_val, batch_size=batch_size, shuffle=True, seed=SEED)
+    # validation_data_generator = get_validation_data_generator(X_train).flow(X_val, y_val, batch_size=batch_size, shuffle=True, seed=SEED)
 
     model.fit_generator(
         generator=training_data_generator, 
@@ -239,8 +239,9 @@ def fit_generator(model, X, y, epochs, batch_size, model_saving_path):
         epochs=epochs, 
         verbose=1, 
         callbacks=callbacks, 
-        validation_data=validation_data_generator, 
-        validation_steps=int(m_val/batch_size)+1, 
+        validation_data=(X_val, y_val), 
+        validation_steps=None, 
+        # validation_steps=int(m_val/batch_size)+1, 
         class_weight=None, 
         max_queue_size=10, 
         workers=1, 

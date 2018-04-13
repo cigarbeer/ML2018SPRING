@@ -269,7 +269,7 @@ if __name__ == '__main__':
     X = preprocess_training_data(X)
     model = net(input_shape=IMAGE_SHAPE, output_shape=OUTPUT_CLASSES_NUM)
     model = compile_model(model)
-    model = fit_generator(model, X, y, epochs=100, batch_size=BATCH_SIZE, model_saving_path='.')
+    model = fit_generator(model, X, y, epochs=100, batch_size=BATCH_SIZE, model_saving_path='./')
     idx, t = read_raw_testing_data('../../dataset/test.csv')
     pred = predict(model, t, batch_size=BATCH_SIZE)
     write_prediction('pred.csv', pred) 

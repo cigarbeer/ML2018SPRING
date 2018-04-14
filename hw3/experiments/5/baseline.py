@@ -343,8 +343,10 @@ if __name__ == '__main__':
     model.compile(loss='categorical_crossentropy',optimizer=adam,metrics=['accuracy'])
     model.fit_generator(datagen.flow(x_train, y_train, batch_size=32), 
                         steps_per_epoch = len(x_train)/32, 
-                        epochs=1, 
-                        validation_data=[x_val,y_val])
+                        epochs=5, 
+                        validation_data=[x_val,y_val], 
+                        callbacks=callbacks,
+    )
 
     score = model.evaluate(x_train,y_train)
     print('\nTrain Acc:', score[1])

@@ -336,10 +336,11 @@ if __name__ == '__main__':
     model.add(Dense(units=7,activation='softmax'))
     model.summary()
     callbacks = [
-        ModelCheckpoint(model_saving_path+'best.hdf5', monitor='val_loss', save_best_only=False, verbose=1), 
+        ModelCheckpoint('best.hdf5', monitor='val_loss', save_best_only=False, verbose=1), 
         # EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=50, verbose=1)
     ]
-    model.compile(loss='categorical_crossentropy',optimizer="adam",metrics=['accuracy'])
+    adam = Adam(lr=1e-4, amsgrad=True) 
+    model.compile(loss='categorical_crossentropy',optimizer=adam,metrics=['accuracy'])
     model.fit_generator(datagen.flow(x_train, y_train, batch_size=32), 
                         steps_per_epoch = len(x_train)/32, 
                         epochs=1, 

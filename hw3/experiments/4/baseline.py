@@ -60,7 +60,7 @@ def preprocess_training_data(X):
     # X = samplewise_normalization(X) 
     # X, mu, sigma = featurewise_normalize(X) 
     X = X.reshape((-1, *IMAGE_SHAPE))
-    return X, None, None  
+    return X, 0, 0  
     # return X, mu, sigma  
 
 def preprocess_testing_data(t, mu, sigma):
@@ -213,7 +213,7 @@ def net(input_shape, output_shape):
 def compile_model(model):
     adam = Adam(lr=1e-4, amsgrad=True) 
     model.compile(
-        optimizer='adam', 
+        optimizer=adam, 
         loss='categorical_crossentropy',
         metrics=['accuracy']
     )

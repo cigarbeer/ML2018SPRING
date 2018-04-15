@@ -209,7 +209,7 @@ def net(input_shape, output_shape):
     return model 
 
 def compile_model(model):
-    adam = Adam(lr=1e-4, amsgrad=True) 
+    adam = Adam(lr=1e-5, amsgrad=True) 
     model.compile(
         optimizer=adam, 
         loss='categorical_crossentropy',

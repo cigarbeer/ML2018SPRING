@@ -272,7 +272,7 @@ def save_statistics(s_path, mu, sigma):
 
 if __name__ == '__main__': 
     # X, y = read_raw_training_data('../../dataset/train.csv') 
-    X, y = bs.read_selected_training_data('../../dataset/X.npy', '../../dataset/y.npy')
+    X, y = read_selected_training_data('../../dataset/X.npy', '../../dataset/y.npy')
     X, mu, sigma = preprocess_training_data(X)
     save_statistics('./statistics.npy', mu, sigma) 
     model = net(input_shape=IMAGE_SHAPE, output_shape=OUTPUT_CLASSES_NUM)

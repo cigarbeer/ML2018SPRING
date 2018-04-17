@@ -259,7 +259,7 @@ def featurewise_normalize(X):
     sigma = np.std(X, axis=0)
     sigma = np.nan_to_num(sigma)
     X = (X - mu) / sigma 
-    X = n.nan_to_num(X) 
+    X = np.nan_to_num(X) 
     return X, mu, sigma 
 
 def samplewise_normalization(X):

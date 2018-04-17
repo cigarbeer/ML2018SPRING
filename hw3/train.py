@@ -216,7 +216,7 @@ def compile_model(model):
 def fit_generator(model, X, y, epochs, batch_size, model_saving_path):
     callbacks = [
         ModelCheckpoint(model_saving_path, monitor='val_loss', save_best_only=True, verbose=1), 
-        EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=30, verbose=1)
+        EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=40, verbose=1)
     ]
 
     (X_train, y_train), (X_val, y_val) = split_validation_set(X, y, VALIDATION_SPLIT) 
@@ -273,14 +273,13 @@ def load_statistics(s_path):
 if __name__ == '__main__':
     data_file = sys.argv[1] 
     X, y = read_raw_training_data(data_file) 
-    # X, y = read_selected_training_data('../../dataset/X.npy', '../../dataset/y.npy')
     X, mu, sigma = preprocess_training_data(X)
     save_statistics(st.STATISTICS_PATH, mu, sigma) 
     model = net(input_shape=IMAGE_SHAPE, output_shape=OUTPUT_CLASSES_NUM)
     model = compile_model(model)
     model.summary() 
     model = fit_generator(model, X, y, epochs=200, batch_size=BATCH_SIZE, model_saving_path=st.MODEL_PATH)
-    
+    model.save(st.MODEL_PATH)
     # idx, t = read_raw_testing_data('../../dataset/test.csv')
     # t = preprocess_testing_data(t, mu, sigma) 
     # pred = predict(model, t, batch_size=BATCH_SIZE)

@@ -59,7 +59,6 @@ def read_selected_training_data(X_file, y_file):
 
 def preprocess_training_data(X):
     X = samplewise_normalization(X) 
-    # X, mu, sigma = featurewise_normalize(X) 
     X = X.reshape((-1, *IMAGE_SHAPE))
     return X, 0, 0  
 

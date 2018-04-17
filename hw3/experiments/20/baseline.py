@@ -283,6 +283,7 @@ if __name__ == '__main__':
     model = net(input_shape=IMAGE_SHAPE, output_shape=OUTPUT_CLASSES_NUM)
     model = compile_model(model)
     model = fit_generator(model, X, y, epochs=200, batch_size=BATCH_SIZE, model_saving_path='./')
+    model.save('after_best.hdf5')
     idx, t = read_raw_testing_data('../../dataset/test.csv')
     t = preprocess_testing_data(t, mu, sigma) 
     pred = predict(model, t, batch_size=BATCH_SIZE)

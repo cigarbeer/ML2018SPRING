@@ -84,10 +84,10 @@ def get_training_data_generator(X):
         # samplewise_std_normalization=False, 
         # featurewise_center=False, 
         # featurewise_std_normalization=False, 
-        rotation_range=0.0, ########################
-        width_shift_range=0, ######################
-        height_shift_range=0, ######################
-        horizontal_flip=False, #######################
+        rotation_range=20.0, ########################
+        width_shift_range=0.1, ######################
+        height_shift_range=0.1, ######################
+        horizontal_flip=True, #######################
         # zca_whitening=False, 
         # zca_epsilon=1e-06, 
         # shear_range=0.0, 

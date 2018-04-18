@@ -274,14 +274,14 @@ def save_statistics(s_path, mu, sigma):
 
 
 if __name__ == '__main__': 
-    X, y = read_raw_training_data('../../dataset/train.csv') 
+    X, y = read_raw_training_data('../dataset/train.csv') 
     X, mu, sigma = preprocess_training_data(X)
     save_statistics('./statistics.npy', mu, sigma) 
     model = net(input_shape=IMAGE_SHAPE, output_shape=OUTPUT_CLASSES_NUM)
     model = compile_model(model)
     model.summary() 
     model = fit_generator(model, X, y, epochs=50, batch_size=BATCH_SIZE, model_saving_path='./samplewise.hdf5')
-    idx, t = read_raw_testing_data('../../dataset/test.csv')
+    idx, t = read_raw_testing_data('../dataset/test.csv')
     t = preprocess_testing_data(t, mu, sigma) 
     pred = predict(model, t, batch_size=BATCH_SIZE)
     write_prediction('samplewise.csv', pred) 

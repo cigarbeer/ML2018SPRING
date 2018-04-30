@@ -56,7 +56,7 @@ class Ensemble:
             t = (t - mu) / sigma 
             results.append(lr.predict(t)) 
         results = np.array(results) 
-        results = np.sum(results, axis=1) 
+        results = np.sum(results, axis=0) 
         pred = (results > threshold).astype(np.uint8) 
         return pred 
 

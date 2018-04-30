@@ -53,8 +53,8 @@ class Ensemble:
         for (X, y), lr in zip(self.training_sets, self.models): 
             mu = np.mean(X, axis=0) 
             sigma = np.nan_to_num(np.std(X, axis=0)) + 1e-10
-            t = (t - mu) / sigma 
-            results.append(lr.predict(t)) 
+            t_n = (t - mu) / sigma 
+            results.append(lr.predict(t_n)) 
         results = np.array(results) 
         results = np.sum(results, axis=0) 
         pred = (results > threshold).astype(np.uint8) 

@@ -65,6 +65,19 @@ def save_average_face(img, path):
     save_data(img, os.path.join(path, 'average_face.npy')) 
     return 
 
+def convert_image(img, X_average, U, k):  
+    img = img - X_average 
+    img_reduced = reduce_dimension(img, U, k) 
+    img_recovered = recover_dimension(img_reduced, U, k) 
+    img_result = img_recovered + X_average 
+    return img_result 
+
+def covert(input_file, output_file, X_average, U, k):
+    img = read_image(input_file) 
+    img = convert_image(img, X_average, U, k) 
+    save_image(img, output_file) 
+    return 
+
 
 if __name__ == '__main__': 
     images_dir = sys.argv[1] 

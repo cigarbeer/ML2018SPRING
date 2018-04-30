@@ -7,7 +7,7 @@ import pickle
 
 
 LAMBDA = 32 
-EPOCH = 30000 
+EPOCH = 30000
 ETA = 1e-4 
 
 def read_training_data(X_file, y_file):
@@ -42,7 +42,7 @@ class Ensemble:
         self.models = [] 
         for X, y in self.training_sets: 
             X_n = scale(X) 
-            lr = LogisticRegression(C=1/LAMBDA, solver='sag', max_iter=EPOCH, verbose=1, n_jobs=-1) 
+            lr = LogisticRegression(C=LAMBDA, tol=1e-6, solver='sag', max_iter=EPOCH, class_weight='balanced', verbose=1, n_jobs=-1) 
             lr.fit(X, y.flatten()) 
             self.models.append(lr) 
         return 

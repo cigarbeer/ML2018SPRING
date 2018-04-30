@@ -52,8 +52,8 @@ class Ensemble:
         threshold = len(self.models) / 2
         for (X, y), lr in zip(self.training_sets, self.models): 
             mu = np.mean(X, axis=0) 
-            sigma = np.std(X, axis=0) 
-            t = (t - mu) /sigma 
+            sigma = np.nan_to_num(np.std(X, axis=0)) + 1e-10
+            t = (t - mu) / sigma 
             results.append(lr.predict(t)) 
         results = np.array(results) 
         results = np.sum(results, axis=1) 
@@ -75,4 +75,4 @@ if __name__ == '__main__':
     t = read_testing_data(t_file) 
     pred = ensemble.predict(t) 
     write_prediction(pred_output_file, pred) 
-    
+

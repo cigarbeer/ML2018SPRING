@@ -72,12 +72,11 @@ def convert_image(img, X_average, U, k):
     img_result = img_recovered + X_average 
     return img_result 
 
-def covert(input_file, output_file, X_average, U, k):
+def convert(input_file, output_file, X_average, U, k):
     img = read_image(input_file) 
     img = convert_image(img, X_average, U, k) 
     save_image(img, output_file) 
     return 
-
 
 if __name__ == '__main__': 
     images_dir = sys.argv[1] 

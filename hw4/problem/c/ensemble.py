@@ -15,6 +15,16 @@ def read_training_data(X_file, y_file):
     y = pd.read_csv(y_file, header=None) 
     return X.values, y.values
 
+def read_testing_data(t_file):
+    t = pd.read_csv(t_file) 
+    return t.values
+
+def write_prediction(prediction_path, pred):
+    df = pd.DataFrame(pred, columns=['label'])
+    df.index = df.index + 1
+    df.to_csv(prediction_path, index_label='id')
+    return df 
+
 class Ensemble: 
     def __init__(self):
         self.training_sets = None 
@@ -53,6 +63,8 @@ class Ensemble:
 if __name__ == '__main__': 
     X_file = sys.argv[1] 
     y_file = sys.argv[2] 
+    t_file = sys.argv[3] 
+    pred_output_file = sys.argv[4] 
     X, y = read_training_data(X_file, y_file) 
     ensemble = Ensemble() 
     ensemble.sample_training_sets(X, y, n_sets=5) 
@@ -60,4 +72,7 @@ if __name__ == '__main__':
     with open('ensemble.pickle', 'wb') as f:
         pickle.dump(ensemble, f) 
         f.close() 
+    t = read_testing_data(t_file) 
+    pred = ensemble.predict(t) 
+    write_prediction(pred_output_file, pred) 
     

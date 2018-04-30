@@ -33,7 +33,7 @@ class Ensemble:
         for X, y in self.training_sets: 
             X_n = scale(X) 
             lr = LogisticRegression(C=1/LAMBDA, solver='sag', max_iter=EPOCH, verbose=1, n_jobs=-1) 
-            lr.fit(X, y) 
+            lr.fit(X, y.flatten()) 
             self.models.append(lr) 
         return 
 

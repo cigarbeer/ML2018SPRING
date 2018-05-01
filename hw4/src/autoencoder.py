@@ -41,8 +41,11 @@ def build_autoencoder(input_shape):
     encoder = Model(inputs=input_layer, outputs=latent_layer) 
     autoencoder = Model(inputs=input_layer, outputs=output_layer) 
     autoencoder.compile(optimizer='nadam', loss='mse') 
+    encoder.compile(optimizer='nadam', loss='mse') 
     autoencoder.summary() 
+    encoder.summary() 
     return encoder, autoencoder 
+    
 
 def train(autoencoder, X, epochs, batch_size): 
     X_train, X_validation = split_validation_set(X, ratio=0.07) 

@@ -13,7 +13,7 @@ ETA = 1e-4
 def read_training_data(X_file, y_file):
     X = pd.read_csv(X_file) 
     y = pd.read_csv(y_file, header=None) 
-    return X.values, y.values
+    return X.values, y.values.flatten()
 
 def read_testing_data(t_file):
     t = pd.read_csv(t_file) 
@@ -42,9 +42,9 @@ class Adaboost:
         self.alphas = []
         X = self.X
         y = self.y  
+        X_n = scale(X) 
         for n in range(self.n_classifiers): 
             weights = self.training_weights[-1]
-            X_n = scale(X) 
             lr = LogisticRegression(C=1/LAMBDA, tol=1e-6, solver='sag', max_iter=EPOCH, verbose=1, n_jobs=-1) 
             lr.fit(X_n, y.flatten(), sample_weight=weights)  
             self.models.append(lr) 

@@ -1,162 +1,122 @@
 import numpy as np 
-import skimage.io 
-import os 
+import pandas as pd  
 import sys 
+import os 
 
-IMAGE_SHAPE = (600, 600, 3) 
-REDUCED_DIMENSION = 4 
+from keras.layers import Input
+from keras.layers import Dense
+from keras.models import Model 
 
-def read_images_from_directory(dir_name): 
-    load_pattern = os.path.join(dir_name, '*.jpg') 
-    img_names = skimage.io.collection.glob(load_pattern)
-    img = skimage.io.imread_collection(img_names) 
-    X = skimage.io.collection.concatenate_images(img) 
-    m, *_ = X.shape
-    X = X.reshape((m, -1)).T
-    return X 
+from sklearn.cluster import KMeans 
 
-def read_image(file_name): 
-    img = skimage.io.imread(file_name) 
-    img = img.reshape((-1, 1)) 
-    return img 
+from keras.models import load_model 
 
-def center_data(X):
-    return X - average_face(X) 
-
-def average_face(X):
-    return np.mean(X, axis=1).reshape((-1, 1))
-
-def decompose(X): 
-    U, S, V = np.linalg.svd(X, full_matrices=False) 
-    eigenvector = U 
-    eigenvalue = S 
-    return eigenvector, eigenvalue 
-
-def vector_to_pixel(e):
-    e = e - np.min(e) 
-    e = e / np.max(e) 
-    e = (e * 255).astype(np.uint8)
-    return e 
-
-def save_data(x, file_name): 
-    np.save(file_name, x) 
-    return 
+IMAGE_SHAPE = (28, 28) 
+IMAGE_FLATTEN_SHAPE = (28 * 28,) 
 
 def read_data(file_name): 
     return np.load(file_name) 
- 
-def show_image(img): 
-    skimage.io.imshow(vector_to_pixel(img.reshape(IMAGE_SHAPE))) 
+
+def preprocess_data(X):
+    m, *_ = X.shape 
+    X = X / 255 
+    X = X.reshape((m, -1)) 
+    return X.astype(np.float32) 
+
+def split_validation_set(X, ratio):
+    m, n = X.shape  
+    train_num = int((1 - ratio) * m) 
+    return X[:train_num], X[train_num:] 
+
+def build_autoencoder(input_shape): 
+    input_layer = Input(shape=input_shape) 
+    encode_layer_1 = Dense(units=128, activation='selu')(input_layer) 
+    encode_layer_2 = Dense(units=64, activation='selu')(encode_layer_1) 
+    
+    latent_layer = Dense(units=32, activation='selu')(encode_layer_2) 
+
+    decoder_layer_1 = Dense(units=64, activation='selu') (latent_layer) 
+    decoder_layer_2 = Dense(units=128, activation='selu') (decoder_layer_1) 
+    
+    output_layer = Dense(units=input_shape[0], activation='sigmoid') (decoder_layer_2) 
+
+    encoder = Model(inputs=input_layer, outputs=latent_layer) 
+    autoencoder = Model(inputs=input_layer, outputs=output_layer) 
+    autoencoder.compile(optimizer='nadam', loss='mse') 
+    autoencoder.summary() 
+    return encoder, autoencoder 
+
+def train(autoencoder, X, epochs, batch_size): 
+    X_train, X_validation = split_validation_set(X, ratio=0.07) 
+    autoencoder.fit(
+        x=X_train, 
+        y=X_train, 
+        epochs=epochs, 
+        validation_data=(X_validation, X_validation), 
+        batch_size=batch_size, 
+        shuffle=True 
+    ) 
     return 
 
-def save_image(img, file_name): 
-    skimage.io.imsave(file_name, vector_to_pixel(img.reshape(IMAGE_SHAPE))) 
+def save_models(autoencoder, encoder, path): 
+    autoencoder.save(os.path.join(path, 'autoencoder.h5')) 
+    encoder.save(os.path.join(path, 'encoder.h5'))
     return 
 
-def reduce_dimension(X, U, k): 
-    return np.dot(X.T, U[:, :k]).T
+def reduce_dimension(X, encoder): 
+    X_reduced = encoder.predict(X) 
+    m, n = X_reduced.shape 
+    X_reduced = X_reduced.reshape((m, -1)) 
+    return X_reduced 
 
-def recover_dimension(Z, U, k): 
-    return np.dot(Z.T, U[:, :k].T).T  
+def clustering(X, n_clusters): 
+    kmeans = KMeans(
+        n_clusters=n_clusters, 
+        init='k-means++', 
+        n_init=10, 
+        max_iter=300, 
+        tol=0.0001, 
+        precompute_distances='auto', 
+        verbose=1, 
+        random_state=0, 
+        copy_x=True, 
+        n_jobs=-1, 
+        algorithm='auto'
+    ) 
+    kmeans.fit(X) 
+    return kmeans 
 
+def read_testing_data(file_name): 
+    t = pd.read_csv(file_name)  
+    return t  
 
-def save_average_face(img, path): 
-    save_image(img, os.path.join(path, 'average_face.jpg')) 
-    save_data(img, os.path.join(path, 'average_face.npy')) 
+def predict(kmeans, t): 
+    label1 = kmeans.labels_[t.image1_index] 
+    label2 = kmeans.labels_[t.image2_index] 
+    pred = (label1 == label2).astype(np.uint8) 
+    return pred 
+
+def save_predection(pred, file_name): 
+    result = pd.DataFrame(columns=['Ans'], dtype=np.uint8) 
+    result.Ans = pred 
+    result.to_csv(file_name, index=True, index_label='ID') 
     return 
 
-def convert_image(img, X_average, U, k):  
-    img = img - X_average 
-    img_reduced = reduce_dimension(img, U, k) 
-    img_recovered = recover_dimension(img_reduced, U, k) 
-    img_result = img_recovered + X_average 
-    return img_result 
 
-def convert(input_file, output_file, X_average, U, k):
-    img = read_image(input_file) 
-    img = convert_image(img, X_average, U, k) 
-    save_image(img, output_file) 
-    return 
 
 if __name__ == '__main__': 
-    images_dir = sys.argv[1] 
-    input_image_name = sys.argv[2] 
-    input_image_file = os.path.join(images_dir, input_image_name) 
-    output_file = sys.argv[3] 
-    print('[read images from directory]')
-    X = read_images_from_directory(images_dir) 
-    print('[save average face]') 
-    X_average = average_face(X) 
-    save_image(X_average, 'average_face.jpg')  
-    save_data(X_average, 'average_face.npy')
-    print('[center data]') 
-    X_centered = center_data(X)  
-    print('[eigen value decomposition]') 
-    eigenvector, eigenvalue = decompose(X_centered) 
-    print('[save eigenvalue and eigenvector]') 
-    save_data(eigenvector[:], 'eigenvector.npy') 
-    save_data(eigenvalue, 'eigenvalue.npy') 
-    print('[reduce dimension]') 
-    X_reduced = reduce_dimension(X_centered, eigenvector, k=REDUCED_DIMENSION) 
-    save_data(X_reduced, 'reduced.npy') 
-    print('[recover dimension]') 
-    X_recovered = recover_dimension(X_reduced, eigenvector, k=REDUCED_DIMENSION) 
-    save_data(X_recovered, 'recovered.npy') 
-    print('[read input image]') 
-    img = read_image(input_image_file) 
-    print('[center input image]') 
-    img_centered = img - X_average 
-    print('[reduce input image dimension]') 
-    img_reduced = reduce_dimension(img_centered, eigenvector, k=REDUCED_DIMENSION) 
-    print('[recover input image dimension]') 
-    img_recovered = recover_dimension(img_reduced, eigenvector, k=REDUCED_DIMENSION) 
-    print('[de-center recovered input image]') 
-    img_decentered = img_recovered + X_average 
-    print('[save results]') 
-    save_image(img_decentered, output_file) 
-    save_data(img_decentered, './reconstruction.npy') 
-    print('[done]') 
+    images_npy_path = sys.argv[1] 
+    t_file = sys.argv[2] 
+    pred_file_path = sys.argv[3] 
+    encoder_path = sys.argv[4] 
 
-# def read_data(file_path): 
-#     return np.load(file_path) 
-
-# def center_data(X):
-#     mean = np.mean(X, axis=0) 
-#     X = X - mean 
-#     return X 
-
-# def average_face(X):
-#     return np.mean(X, axis=0)
-
-# def svd(X):
-#     U, S, Vh = np.linalg.svd(X.T) 
-#     sorted_idx = np.argsort(np.diag(S)) 
-#     U = U[:, sorted_idx]
-#     S = S[:, sorted_idx]
-#     return U, S
-
-# def eigenvalue_to_pixel(e):
-#     e -= np.min(e) 
-#     e /= np.max(e) 
-#     e = (e * 255).astype(np.uint8)
-#     return e 
-
-# def normalize(X): 
-#     mu, sigma = statistics(X) 
-#     X = (X -  mu) / sigma 
-#     return X 
-
-# def denormalize(N, mu, sigma): 
-#     X = N * sigma + mu 
-#     return X.astype(np.uint8)
-
-# def statistics(X): 
-#     mu = np.mean(X, axis=0) 
-#     sigma = np.std(X, axis=0) + 1e-10
-#     return mu, sigma 
-
-# def reduce_dimension(X, U, k): 
-#     return np.dot(X, U[:, :k]) 
-
-# def recover_dimension(Z, U, k): 
-#     return np.dot(Z, U[:, :k].T) 
+    X = read_data(images_npy_path) 
+    t = read_testing_data(t_file)
+    encoder = load_model(encoder_path)   
+     
+    X_preprocessed = preprocess_data(X) 
+    X_reduced = reduce_dimension(X_preprocessed, encoder) 
+    kmeans = clustering(X_reduced, n_clusters=2) 
+    
+    pred = predict(kmeans, t) 
+    save_predection(pred, pred_file_path)  

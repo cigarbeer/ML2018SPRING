@@ -34,7 +34,7 @@ class Ensemble:
         self.training_sets = []
         m, _ = X.shape 
         for n in range(n_sets):
-            sample_idx = np.random.choice(m, size=m, replace=True) 
+            sample_idx = np.random.choice(m, size=2*m, replace=True) 
             self.training_sets.append((X[sample_idx], y[sample_idx])) 
         return 
 
@@ -42,7 +42,7 @@ class Ensemble:
         self.models = [] 
         for X, y in self.training_sets: 
             X_n = scale(X) 
-            lr = LogisticRegression(C=1/LAMBDA, tol=1e-4, solver='sag', max_iter=EPOCH, class_weight='balanced', verbose=1, n_jobs=-1) 
+            lr = LogisticRegression(C=1/LAMBDA, tol=1e-6, solver='sag', max_iter=EPOCH, verbose=1, n_jobs=-1) 
             lr.fit(X_n, y.flatten()) 
             self.models.append(lr) 
         return 
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     pred_output_file = sys.argv[4] 
     X, y = read_training_data(X_file, y_file) 
     ensemble = Ensemble() 
-    ensemble.sample_training_sets(X, y, n_sets=10) 
+    ensemble.sample_training_sets(X, y, n_sets=11) 
     ensemble.train() 
     with open('ensemble.pickle', 'wb') as f:
         pickle.dump(ensemble, f) 

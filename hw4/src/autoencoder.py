@@ -110,7 +110,7 @@ if __name__ == '__main__':
     X = read_data(file_name) 
     X_preprocessed = preprocess_data(X) 
     encoder, autoencoder = build_autoencoder(input_shape=IMAGE_FLATTEN_SHAPE) 
-    train(autoencoder, X_preprocessed, epochs=100, batch_size=32) 
+    train(autoencoder, X_preprocessed, epochs=100, batch_size=128) 
     save_models(autoencoder, encoder, path='./') 
     # X_reduced = reduce_dimension(X_preprocessed, encoder) 
     # kmeans = clustering(X_reduced, n_clusters=2)  

@@ -43,7 +43,7 @@ class Ensemble:
         for X, y in self.training_sets: 
             X_n = scale(X) 
             lr = LogisticRegression(C=1/LAMBDA, tol=1e-4, solver='sag', max_iter=EPOCH, class_weight='balanced', verbose=1, n_jobs=-1) 
-            lr.fit(X, y.flatten()) 
+            lr.fit(X_n, y.flatten()) 
             self.models.append(lr) 
         return 
 
@@ -52,7 +52,7 @@ class Ensemble:
         threshold = len(self.models) / 2
         for (X, y), lr in zip(self.training_sets, self.models): 
             mu = np.mean(X, axis=0) 
-            sigma = np.nan_to_num(np.std(X, axis=0)) + 1e-10
+            sigma = np.nan_to_num(np.std(X, axis=0)) + 1e-30
             t_n = (t - mu) / sigma 
             results.append(lr.predict(t_n)) 
         results = np.array(results) 

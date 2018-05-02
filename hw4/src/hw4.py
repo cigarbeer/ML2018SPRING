@@ -42,7 +42,9 @@ def build_autoencoder(input_shape):
 
     encoder = Model(inputs=input_layer, outputs=latent_layer) 
     autoencoder = Model(inputs=input_layer, outputs=output_layer) 
+    encoder.compile(optimizer='nadam', loss='mse')
     autoencoder.compile(optimizer='nadam', loss='mse') 
+    encoder.summary() 
     autoencoder.summary() 
     return encoder, autoencoder 
 

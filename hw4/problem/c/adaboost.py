@@ -7,7 +7,7 @@ import pickle
 
 
 LAMBDA = 32 
-EPOCH = 30000
+EPOCH = 10000
 ETA = 1e-4 
 
 def read_training_data(X_file, y_file):
@@ -45,15 +45,18 @@ class Adaboost:
         X_n = scale(X) 
         for n in range(self.n_classifiers): 
             weights = self.training_weights[-1]
-            lr = LogisticRegression(C=1/LAMBDA, tol=1e-6, solver='sag', max_iter=EPOCH, verbose=1, n_jobs=-1) 
+            lr = LogisticRegression(C=1/LAMBDA, tol=1e-4, solver='sag', max_iter=EPOCH, verbose=0, n_jobs=-1) 
             lr.fit(X_n, y.flatten(), sample_weight=weights)  
             self.models.append(lr) 
             pred = lr.predict(X_n) 
             correct = pred == y 
             wrong = pred != y 
             epsilon = np.sum(weights[wrong]) / np.sum(weights) 
+            print('epsilon:', epsilon)
             d = np.sqrt((1 - epsilon) / epsilon) 
+            print('d:', d)
             alpha = np.log(d) 
+            print('alpha', alpha)
             y_s = 2 * y - 1
             pred_s = 2 * pred - 1
             new_weights = weights * np.exp(-y_s * pred_s * alpha)             

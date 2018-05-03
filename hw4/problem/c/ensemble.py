@@ -7,8 +7,7 @@ import pickle
 
 
 LAMBDA = 32 
-EPOCH = 30000
-ETA = 1e-4 
+EPOCH = 200
 
 def read_training_data(X_file, y_file):
     X = pd.read_csv(X_file) 
@@ -34,7 +33,7 @@ class Ensemble:
         self.training_sets = []
         m, _ = X.shape 
         for n in range(n_sets):
-            sample_idx = np.random.choice(m, size=2*m, replace=True) 
+            sample_idx = np.random.choice(m, size=m, replace=True) 
             self.training_sets.append((X[sample_idx], y[sample_idx])) 
         return 
 

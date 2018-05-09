@@ -14,5 +14,5 @@ def read_label_data(path):
     return data.label, data.words.str.strip().str.lower() 
 
 def read_unlabel_data(path):
-    data = pd.read_table(path, header=None, names=['words'], encoding='utf-8', engine='python') 
-    return data.words 
+    data = pd.read_table(path, header=None, names=['words'], sep='\r\n', encoding='utf-8', engine='python') 
+    return data.words.str.strip().str.lower()

@@ -13,7 +13,7 @@ from keras.models import load_model
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO) 
 
-STOPWORDS = set('for a an of the and to in on at or are i am was 2'.split(' '))
+STOPWORDS = set('for a an of the and to as in on at or are i am was 2'.split(' '))
 MAX_DICTIONATY_SIZE = 10000 
 
 
@@ -31,12 +31,12 @@ def concat_data(label_texts, unlabel_texts):
 def texts2corpus(texts): 
     return split_texts(texts) 
 
-def build_dictionary(corpus): 
+def build_dictionary(corpus, max_dct_size): 
     dct = Dictionary(corpus) 
     dct.filter_extremes(
         no_below=3, 
         no_above=0.5, 
-        keep_n=10000, 
+        keep_n=max_dct_size, 
         keep_tokens=None 
     ) 
     # dct.filter_n_most_frequent(
@@ -58,13 +58,12 @@ def tokenize(words, num_words):
     tkn.fit_on_texts(words) 
     return tkn 
 
-
 def split_texts(texts):
-    return texts.apply(text_to_word_sequence, filters=punctuation, lower=True, split=' ')
+    return texts.apply(text_to_word_sequence, lower=True, split=' ')
 
-def word2vec(words, dim, window, min_count, n_iter): 
+def word2vec(corpus, dim, window, min_count, n_iter): 
     return gensim.models.Word2Vec(
-        sentences=words, 
+        sentences=corpus, 
         sg=1,
         size=dim, 
         window=window, 
@@ -75,7 +74,7 @@ def word2vec(words, dim, window, min_count, n_iter):
     ) 
 
 
-def save_object(path, obj):
+def save_object(obj, path):
     with open(path, 'wb') as f:
         pickle.dump(obj, f) 
         f.close()

@@ -31,8 +31,8 @@ def concat_data(label_texts, unlabel_texts):
 def texts2corpus(texts): 
     return split_texts(texts) 
 
-def build_dictionary(texts): 
-    dct = Dictionary(texts) 
+def build_dictionary(corpus): 
+    dct = Dictionary(corpus) 
     dct.filter_extremes(
         no_below=3, 
         no_above=0.5, 
@@ -42,8 +42,9 @@ def build_dictionary(texts):
     # dct.filter_n_most_frequent(
     #     remove_n=3
     # )
-    stop_ids = [dct.get(stopword) for stopword in STOPWORDS if not dct.get(stopword) is None]  
-    dct.filter_tokens(bad_ids=stop_ids, good_ids=None)
+    stop_ids = [dct.token2id.get(stopword) for stopword in STOPWORDS if not dct.token2id.get(stopword) is None]  
+    dct.filter_tokens(bad_ids=stop_ids, good_ids=None) 
+    dct.compactify() 
     return dct 
 
 def tokenize(words, num_words): 

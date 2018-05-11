@@ -1,6 +1,7 @@
 import logging 
 import pickle 
 from string import punctuation 
+import multiprocessing 
 
 import numpy as np 
 import pandas as pd 
@@ -81,8 +82,9 @@ def word2vec(corpus, dim, window, min_count, n_iter):
         window=window, 
         min_count=min_count, 
         iter=n_iter, 
-        compute_loss=True, 
-        seed=0
+        # compute_loss=True, 
+        seed=0, 
+        workers=multiprocessing.cpu_count()
     ) 
 
 def wordvector_rnn_classifier(wordvector, tokenizer, max_document_size):

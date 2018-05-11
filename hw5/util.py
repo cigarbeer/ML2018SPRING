@@ -165,6 +165,16 @@ def train(model, X, y, batch_size, epochs, validation_split, save_model_path):
     )
     return model 
 
+def predict(model, t, batch_size): 
+    prob = model.predict(x=t, batch_size=batch_size, verbose=1) 
+    pred = np.argmax(prob, axis=1) 
+    return pred 
+
+def write_prediction(pred, path): 
+    df = pd.DataFrame(columns=['label'], data=pred) 
+    df.to_csv(path, index=True, index_label='id') 
+    return 
+
 def save_object(obj, path):
     with open(path, 'wb') as f:
         pickle.dump(obj, f) 

@@ -8,6 +8,7 @@ import pandas as pd
 import gensim 
 from gensim.corpora import Dictionary 
 
+from keras.utils import to_categorical 
 from keras.preprocessing.text import Tokenizer 
 from keras.preprocessing.text import text_to_word_sequence 
 from keras.preprocessing.sequence import pad_sequences 
@@ -112,7 +113,7 @@ def wordvector_rnn_classifier(wordvector, tokenizer, max_document_size):
     model.add(Dense(units=128, activation='selu'))
     model.add(Dropout(rate=0.2))
 
-    model.add(Dense(units=1, activation='sigmoid')) 
+    model.add(Dense(units=2, activation='softmax')) 
     model.summary() 
 
     model.compile(
@@ -142,7 +143,7 @@ def train(model, X, y, batch_size, epochs, validation_split, save_model_path):
     ] 
     model.fit(
         x=X, 
-        y=y.values, 
+        y=to_categorical(y), 
         batch_size=batch_size, 
         epochs=epochs, 
         verbose=1, 

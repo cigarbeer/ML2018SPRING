@@ -49,7 +49,7 @@ def build_tokenizer(texts, num_words=None):
         split=' ', 
         char_level=False 
     ) 
-    tkn.fit_on_texts(words) 
+    tkn.fit_on_texts(texts) 
     return tkn 
 
 def texts2idseq(texts, tokenizer): 

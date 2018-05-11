@@ -231,5 +231,7 @@ class Hw5:
         self.max_document_size = None 
         self.tokenizer = None 
         self.wordvector = None 
-        self.rnn_model = None 
-        self.bow_model = None 
+    
+    def load_rnn_model(self): 
+        return load_model(st.RNN_MODEL_CHECKPOINT_PATH) 
+

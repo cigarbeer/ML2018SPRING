@@ -12,7 +12,7 @@ if __name__ == '__main__':
     print('[padding to the same length as training data]') 
     idseqpad = pad_idseq(idseq, max_len=hw5.max_document_size) 
     print('[make prediction]') 
-    pred = predict(model=hw5.rnn_model, t=idseqpad, batch_size=st.BATCH_SIZE) 
+    pred = predict(model=hw5.load_rnn_model(), t=idseqpad, batch_size=st.BATCH_SIZE) 
     print('[write prediction]') 
     write_prediction(pred, prediction_file_path)  
     print('[done]')

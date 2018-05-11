@@ -37,7 +37,4 @@ if __name__ == '__main__':
     wv_rnn_model = wordvector_rnn_classifier(wordvector, tokenizer, max_document_size) 
     print('[start training]')
     train(model=wv_rnn_model, X=idseqpad, y=label, batch_size=st.BATCH_SIZE, epochs=st.EPOCHS, validation_split=st.VALIDATION_SPLIT, save_model_path=st.RNN_MODEL_CHECKPOINT_PATH)
-    print('[save rnn model]')
-    hw5.rnn_model = load_model(RNN_MODEL_CHECKPOINT_PATH) 
-    save_object(hw5, st.HW5_MODEL_PATH)
     print('[done]') 

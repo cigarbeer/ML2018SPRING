@@ -2,8 +2,6 @@ import numpy as np
 import pandas as pd 
 import sys 
 from util import * 
-import logging 
-logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO) 
 
 if __name__ == '__main__':
     label_file_path = sys.argv[1] 

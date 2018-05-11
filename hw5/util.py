@@ -89,29 +89,22 @@ def wordvector_rnn_classifier(wordvector, tokenizer, max_document_size):
         trainable=False 
     ))
     model.add(GRU(
-        units=256, 
+        units, 
         activation='tanh', 
         recurrent_activation='hard_sigmoid', 
         use_bias=True, 
-        dropout=0.2, 
-        recurrent_dropout=0.2, 
+        dropout=0.0, 
+        recurrent_dropout=0.0,
         kernel_initializer='glorot_uniform', 
         recurrent_initializer='orthogonal', 
         bias_initializer='zeros', 
         kernel_regularizer=None, 
-        recurrent_regularizer=None, 
+        recurrent_regularizer=None,
         bias_regularizer=None, 
         activity_regularizer=None, 
         kernel_constraint=None, 
         recurrent_constraint=None, 
-        bias_constraint=None, 
-        implementation=1, 
-        return_sequences=False, 
-        return_state=False, 
-        go_backwards=False, 
-        stateful=False, 
-        unroll=False, 
-        reset_after=False
+        bias_constraint=None
     ))
     model.add(Dense(units=128, activation='selu')) 
     model.add(Dropout(rate=0.2))

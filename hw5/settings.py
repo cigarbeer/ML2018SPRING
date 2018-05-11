@@ -1,4 +1,14 @@
-RNN_MODEL_CHECKPOINT_PATH = './rnn.hdf5'
+WORDVECTOR_DIM = 256 
+WORDVECTOR_WINDOW = 7 
+WORDVECTOR_MIN_COUNT = 3
+WORDVECTOR_N_ITER = 100
+
+BATCH_SIZE = 128 
+EPOCHS = 200 
+VALIDATION_SPLIT = 0.1 
+
+RNN_MODEL_CHECKPOINT_PATH = './rnn.hdf5' 
+HW5_MODEL_PATH = './hw5.pickle' 
 
 STOPWORDS = set(['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you',
        'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his',

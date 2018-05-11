@@ -21,9 +21,8 @@ from keras.layers import Dense
 from keras.layers import Dropout 
 from keras.callbacks import EarlyStopping 
 from keras.callbacks import ModelCheckpoint 
-
-from settings import STOPWORDS 
-from settings import RNN_MODEL_CHECKPOINT_PATH 
+ 
+import settings as st 
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO) 
 
@@ -41,6 +40,11 @@ def read_testing_data(path):
 
 def concat_data(label_texts, unlabel_texts): 
     return pd.concat([label_texts, unlabel_texts]) 
+
+def texts2corpus(texts): 
+    def split_texts(texts):
+        return texts.apply(text_to_word_sequence, lower=True, split=' ')
+    return split_texts(texts) 
 
 
 def build_tokenizer(texts, num_words=None): 
@@ -196,15 +200,10 @@ def build_dictionary(corpus, min_count, max_dct_size):
     # dct.filter_n_most_frequent(
     #     remove_n=3
     # )
-    stop_ids = [dct.token2id.get(stopword) for stopword in STOPWORDS if not dct.token2id.get(stopword) is None]  
+    stop_ids = [dct.token2id.get(stopword) for stopword in st.STOPWORDS if not dct.token2id.get(stopword) is None]  
     dct.filter_tokens(bad_ids=stop_ids, good_ids=None) 
     dct.compactify() 
     return dct 
-
-def texts2corpus(texts): 
-    def split_texts(texts):
-        return texts.apply(text_to_word_sequence, lower=True, split=' ')
-    return split_texts(texts) 
 
 def split_validation_set(X, y, rate): 
     m ,n = X.shape

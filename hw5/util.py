@@ -89,7 +89,7 @@ def wordvector_rnn_classifier(wordvector, tokenizer, max_document_size):
         trainable=False 
     ))
     model.add(GRU(
-        units, 
+        units=wordvector.vector_size, 
         activation='tanh', 
         recurrent_activation='hard_sigmoid', 
         use_bias=True, 

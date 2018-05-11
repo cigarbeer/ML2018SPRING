@@ -55,7 +55,7 @@ def build_tokenizer(texts, num_words=None):
 def texts2idseq(texts, tokenizer): 
     return tokenizer.texts_to_sequences(texts) 
 
-def pad_idseq(idseq, max_len): 
+def pad_idseq(idseq, max_len=None): 
     return pad_sequences(idseq, maxlen=max_len, padding='post', truncating='post') 
 
 def convert_embedding_weights(tokenizer, wordvector): 

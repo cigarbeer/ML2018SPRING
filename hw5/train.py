@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd 
 import sys 
 from util import * 
+import logging 
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO) 
 
 if __name__ == '__main__':
     label_file_path = sys.argv[1] 
@@ -28,4 +30,3 @@ if __name__ == '__main__':
     print('[start training]')
     train(model=wv_rnn_model, X=idseqpad, y=label, batch_size=128, epochs=1, validation_split=0.1, save_model_path='./rnn.hdf5')
     print('[done]')
-    

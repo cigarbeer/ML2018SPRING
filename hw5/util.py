@@ -101,8 +101,8 @@ def wordvector_rnn_classifier(wordvector, tokenizer, max_document_size):
         activation='tanh', 
         recurrent_activation='hard_sigmoid', 
         use_bias=True, 
-        dropout=0.0, 
-        recurrent_dropout=0.0,
+        dropout=0.2, 
+        recurrent_dropout=0.2,
         kernel_initializer='glorot_uniform', 
         recurrent_initializer='orthogonal', 
         bias_initializer='zeros', 
@@ -115,9 +115,9 @@ def wordvector_rnn_classifier(wordvector, tokenizer, max_document_size):
         bias_constraint=None
     ))
     model.add(Dense(units=128, activation='selu')) 
-    model.add(Dropout(rate=0.2))
+    model.add(Dropout(rate=0.25))
     model.add(Dense(units=128, activation='selu'))
-    model.add(Dropout(rate=0.2))
+    model.add(Dropout(rate=0.25))
 
     model.add(Dense(units=2, activation='softmax')) 
     model.summary() 
@@ -136,7 +136,7 @@ def train(model, X, y, batch_size, epochs, validation_split, save_model_path):
         EarlyStopping(
             monitor='val_acc', 
             min_delta=1e-4, 
-            patience=30, 
+            patience=10, 
             verbose=1
         ), 
         ModelCheckpoint(

@@ -1,4 +1,3 @@
-MAX_DICTIONATY_SIZE = 50000 
 
 
 STOPWORDS = set(['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you',

@@ -142,7 +142,7 @@ def train(model, X, y, batch_size, epochs, validation_split, save_model_path):
     ] 
     model.fit(
         x=X, 
-        y=y, 
+        y=y.values, 
         batch_size=batch_size, 
         epochs=epochs, 
         verbose=1, 

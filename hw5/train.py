@@ -13,7 +13,7 @@ if __name__ == '__main__':
     print('[convert texts to splitted corpus]')
     corpus = texts2corpus(texts) 
     print('[train word2vec]') 
-    wordvector = word2vec(corpus=corpus, dim=st.WORDVECTOR_DIM, window=st.WORDVECTOR_WINDOW, min_count=st.WORDVECTOR_MIN_COUNT, n_iter=1)
+    wordvector = word2vec(corpus=corpus, dim=st.WORDVECTOR_DIM, window=st.WORDVECTOR_WINDOW, min_count=st.WORDVECTOR_MIN_COUNT, n_iter=st.WORDVECTOR_N_ITER)
     print('[build tokenizer]')
     tokenizer = build_tokenizer(texts) 
     print('[translate texts to idx sequence]') 

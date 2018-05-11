@@ -150,11 +150,11 @@ def train(model, X, y, batch_size, epochs, validation_split, save_model_path):
         validation_split=validation_split, 
         validation_data=None, 
         shuffle=True, 
-        class_weight=None, 
-        sample_weight=None, 
-        initial_epoch=0, 
-        steps_per_epoch=None, 
-        validation_steps=None
+        # class_weight=None, 
+        # sample_weight=None, 
+        initial_epoch=0
+        # steps_per_epoch=None, 
+        # validation_steps=None
     )
     return model 
 

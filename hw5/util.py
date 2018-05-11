@@ -22,6 +22,7 @@ from keras.callbacks import EarlyStopping
 from keras.callbacks import ModelCheckpoint 
 
 from settings import STOPWORDS 
+from settings import RNN_MODEL_CHECKPOINT_PATH 
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO) 
 

@@ -1,5 +1,3 @@
-import numpy as np 
-import pandas as pd 
 import sys 
 from util import * 
 
@@ -26,5 +24,12 @@ if __name__ == '__main__':
     print('[build rnn model]') 
     wv_rnn_model = wordvector_rnn_classifier(wordvector, tokenizer, max_document_size) 
     print('[start training]')
-    train(model=wv_rnn_model, X=idseqpad, y=label, batch_size=128, epochs=1, validation_split=0.1, save_model_path='./rnn.hdf5')
-    print('[done]')
+    train(model=wv_rnn_model, X=idseqpad, y=label, batch_size=128, epochs=1, validation_split=0.1, save_model_path=RNN_MODEL_CHECKPOINT_PATH)
+    print('[save everything]') 
+    hw5 = Hw5()
+    hw5.max_document_size = max_document_size 
+    hw5.wordvector = wordvector 
+    hw5.tokenizer = tokenizer 
+    hw5.rnn_model = load_model(RNN_MODEL_CHECKPOINT_PATH) 
+    save_object(hw5, './hw5.pickle')
+    

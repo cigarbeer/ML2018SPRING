@@ -1,4 +1,4 @@
-
+RNN_MODEL_CHECKPOINT_PATH = './rnn.hdf5'
 
 STOPWORDS = set(['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you',
        'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his',

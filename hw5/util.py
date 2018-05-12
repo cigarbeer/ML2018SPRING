@@ -165,7 +165,6 @@ def train(model, X, y, batch_size, epochs, validation_split, save_model_path):
         # steps_per_epoch=None, 
         # validation_steps=None
     ) 
-    model.save(save_model_path) 
     return model 
 
 def predict(model, t, batch_size): 
@@ -238,13 +237,15 @@ class Hw5:
     def get_wordvector(self, corpus=None): 
         if corpus is None: 
             return self.wordvector  
-        self.wordvector = word2vec(corpus=corpus, dim=st.WORDVECTOR_DIM, window=st.WORDVECTOR_WINDOW, min_count=st.WORDVECTOR_MIN_COUNT, n_iter=st.WORDVECTOR_N_ITER)
+        if self.wordvector is None: 
+            self.wordvector = word2vec(corpus=corpus, dim=st.WORDVECTOR_DIM, window=st.WORDVECTOR_WINDOW, min_count=st.WORDVECTOR_MIN_COUNT, n_iter=st.WORDVECTOR_N_ITER)
         return self.wordvector 
 
     def get_tokenizer(self, texts=None):
         if texts is None: 
             return self.tokenizer 
-        self.tokenizer = build_tokenizer(texts) 
+        if self.tokenizer is None: 
+            self.tokenizer = build_tokenizer(texts) 
         return self.tokenizer 
 
     def load_rnn_model(self): 

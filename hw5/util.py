@@ -38,7 +38,7 @@ def read_unlabel_data(path):
 def read_testing_data(path): 
     data = pd.read_table(path, header=0, names=['line'], encoding='utf-8', engine='python') 
     data = data.line.str.split(pat=',', n=1, expand=True) 
-    data.rename(columns={0: 'id', 1: 'text'})
+    data = data.rename(columns={0: 'id', 1: 'text'})
     return data.id, data.text.str.strip().lower() 
 
 def concat_data(label_texts, unlabel_texts): 

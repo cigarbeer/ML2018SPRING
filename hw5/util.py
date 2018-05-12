@@ -235,13 +235,13 @@ class Hw5:
         self.tokenizer = None 
         self.wordvector = None 
     
-    def get_wordvector(corpus=None): 
+    def get_wordvector(self, corpus=None): 
         if corpus is None: 
             return self.wordvector  
         self.wordvector = word2vec(corpus=corpus, dim=st.WORDVECTOR_DIM, window=st.WORDVECTOR_WINDOW, min_count=st.WORDVECTOR_MIN_COUNT, n_iter=st.WORDVECTOR_N_ITER)
         return self.wordvector 
 
-    def get_tokenizer(texts=None):
+    def get_tokenizer(self, texts=None):
         if texts is None: 
             return self.tokenizer 
         self.tokenizer = build_tokenizer(texts) 

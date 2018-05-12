@@ -103,8 +103,8 @@ def wordvector_rnn_classifier(wordvector, tokenizer, max_document_size):
         activation='tanh', 
         recurrent_activation='hard_sigmoid', 
         use_bias=True, 
-        dropout=0.2, 
-        recurrent_dropout=0.2,
+        dropout=st.RNN_DROPOUT_RATE, 
+        recurrent_dropout=st.RNN_DROPOUT_RATE,
         kernel_initializer='glorot_uniform', 
         recurrent_initializer='orthogonal', 
         bias_initializer='zeros', 
@@ -116,10 +116,12 @@ def wordvector_rnn_classifier(wordvector, tokenizer, max_document_size):
         recurrent_constraint=None, 
         bias_constraint=None
     ))
-    model.add(Dense(units=128, activation='selu')) 
-    model.add(Dropout(rate=0.25))
-    model.add(Dense(units=128, activation='selu'))
-    model.add(Dropout(rate=0.25))
+    model.add(Dense(units=256, activation='selu')) 
+    model.add(Dropout(rate=st.DENSE_DROPOUT_RATE))
+    model.add(Dense(units=256, activation='selu'))
+    model.add(Dropout(rate=st.DENSE_DROPOUT_RATE))
+    model.add(Dense(units=256, activation='selu'))
+    model.add(Dropout(rate=st.DENSE_DROPOUT_RATE))
 
     model.add(Dense(units=2, activation='softmax')) 
     model.summary() 
@@ -164,7 +166,8 @@ def train(model, X, y, batch_size, epochs, validation_split, save_model_path):
         initial_epoch=0
         # steps_per_epoch=None, 
         # validation_steps=None
-    )
+    ) 
+    model.save(save_model_path) 
     return model 
 
 def predict(model, t, batch_size): 

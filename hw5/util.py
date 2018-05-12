@@ -1,9 +1,12 @@
+import settings as st 
+
 import logging 
 import pickle 
 from string import punctuation 
 import multiprocessing 
 
 import numpy as np 
+np.random.seed(st.SEED) 
 import pandas as pd 
 
 import gensim 
@@ -23,7 +26,6 @@ from keras.layers import Dropout
 from keras.callbacks import EarlyStopping 
 from keras.callbacks import ModelCheckpoint 
  
-import settings as st 
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO) 
 

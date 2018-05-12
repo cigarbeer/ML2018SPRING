@@ -120,8 +120,6 @@ def wordvector_rnn_classifier(wordvector, tokenizer, max_document_size):
     model.add(Dropout(rate=st.DENSE_DROPOUT_RATE))
     model.add(Dense(units=256, activation='selu'))
     model.add(Dropout(rate=st.DENSE_DROPOUT_RATE))
-    model.add(Dense(units=256, activation='selu'))
-    model.add(Dropout(rate=st.DENSE_DROPOUT_RATE))
 
     model.add(Dense(units=2, activation='softmax')) 
     model.summary() 
@@ -237,6 +235,18 @@ class Hw5:
         self.tokenizer = None 
         self.wordvector = None 
     
+    def get_wordvector(corpus=None): 
+        if corpus is None: 
+            return self.wordvector  
+        self.wordvector = word2vec(corpus=corpus, dim=st.WORDVECTOR_DIM, window=st.WORDVECTOR_WINDOW, min_count=st.WORDVECTOR_MIN_COUNT, n_iter=st.WORDVECTOR_N_ITER)
+        return self.wordvector 
+
+    def get_tokenizer(texts=None):
+        if texts is None: 
+            return self.tokenizer 
+        self.tokenizer = build_tokenizer(texts) 
+        return self.tokenizer 
+
     def load_rnn_model(self): 
         return load_model(st.RNN_MODEL_CHECKPOINT_PATH) 
 

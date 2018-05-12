@@ -8,7 +8,7 @@ if __name__ == '__main__':
     print('[load hw5]')
     hw5 = load_object(st.HW5_MODEL_PATH) 
     print('[translate texts to idx sequence]') 
-    idseq = texts2idseq(ttexts, hw5.tokenizer) 
+    idseq = texts2idseq(ttexts, hw5.get_tokenizer()) 
     print('[padding to the same length as training data]') 
     idseqpad = pad_idseq(idseq, max_len=hw5.max_document_size) 
     print('[make prediction]') 

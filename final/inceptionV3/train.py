@@ -6,8 +6,8 @@ from keras.layers import GlobalAveragePooling2D
 from keras.layers import Input 
 from keras import backend as K 
 
-from ..util import settings as st 
-from ..util import datagen as dg 
+from final.util import settings as st 
+from final.util import datagen as dg 
 
 base_model = InceptionV3(input_tensor=Input(shape=(224, 224, 1)), weights='imagenet', include_top=False) 
 

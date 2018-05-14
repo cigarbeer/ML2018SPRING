@@ -1,6 +1,6 @@
 from keras.preprocessing.image import ImageDataGenerator 
 
-from util import settings as st 
+from final.util import settings as st 
 
 train_datagen = ImageDataGenerator(**st.IMAGE_DATA_GENERATOR_TRAIN_KARGS) 
 test_datagen = ImageDataGenerator(**st.IMAGE_DATA_GENERATOR_TEST_KARGS) 

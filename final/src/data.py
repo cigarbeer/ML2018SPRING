@@ -39,6 +39,7 @@ def get_train_generator(directory):
 
 
 def get_test_generator(directory): 
+    n_testing_samples = len(image.list_pictures(directory)) 
     test_generator = image.ImageDataGenerator(
         featurewise_center=False, 
         samplewise_center=False, 
@@ -65,7 +66,7 @@ def get_test_generator(directory):
         color_mode='rgb', 
         classes=None, 
         class_mode=None, 
-        batch_size=1, 
+        batch_size=n_testing_samples, 
         shuffle=False, 
         seed=0, 
         save_to_dir=None, 

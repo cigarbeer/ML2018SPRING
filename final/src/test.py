@@ -52,7 +52,7 @@ if __name__ == '__main__':
     print('[get image name]')
     image_name_str = pd.DataFrame(test_generator.filenames).apply(lambda x: os.path.basename(x[0])) 
     print('[build output table]')
-    df = pd.concat([image_name_str, class_name_str], names=['Image', 'Id']) 
+    df = pd.concat([image_name_str, class_name_str], names=['Image', 'Id'], axis=1) 
     print('[write output file]')
     df.to_csv(prediction_output_file, index=False)
     print('[done]')

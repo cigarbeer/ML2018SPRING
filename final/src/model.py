@@ -15,10 +15,9 @@ from keras.callbacks import ModelCheckpoint
 
 from keras.applications.vgg16 import VGG16 
 
-vgg16 = VGG16(input_tensor=input_layer, weights='imagenet', include_top=False)  
 
 input_layer = Input(shape=(224, 224, 3), name='input_layer') 
-vgg16_block = vgg16(input_layer) 
+vgg16 = VGG16(input_tensor=input_layer, weights='imagenet', include_top=False)  
 global_average_pooling_layer = GlobalAveragePooling2D(name='global_average_pooling_layer')(vgg16.output) 
 
 dense_layer_1 = Dense(units=256, activation='selu', name='dense_layer_1')(global_average_pooling_layer) 

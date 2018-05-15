@@ -23,5 +23,9 @@ def predict(model, generator):
 
 if __name__ == '__main__': 
     model_path = sys.argv[1] 
+    training_set_dir = sys.argv[2] 
+    testing_set_dir = sys.argv[3] 
+    prediction_output_file = sys.argv[4] 
+
     model = load_model(model_path) 
-    prediction = predict(model, D.test_generator) 
+    prediction = predict(model, D.get_test_generator(directory=testing_set_dir)) 

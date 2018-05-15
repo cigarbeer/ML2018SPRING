@@ -3,7 +3,7 @@ N_TRAINING_EXAMPLES = 9850
 BATCH_SIZE = 256 
 EPOCHS = 50 
 
-MODEL_CHECKPOINT_PATH = 'model.hdf5'
+MODEL_CHECKPOINT_PATH = 'final/model.hdf5'
 
 IMAGE_DATA_GENERATOR_TRAIN_KARGS = dict(
     featurewise_center=False, 

@@ -1,7 +1,7 @@
 TRAINING_SET_DIR = 'final/dataset/train_classified' 
 N_TRAINING_EXAMPLES = 9850 
 BATCH_SIZE = 256 
-EPOCHS = 50 
+EPOCHS = 20 
 
 MODEL_CHECKPOINT_PATH = 'final/model.hdf5'
 

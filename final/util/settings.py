@@ -1,4 +1,4 @@
-TRAINING_SET_DIR = 'dataset/train_classified' 
+TRAINING_SET_DIR = 'final/dataset/train_classified' 
 N_TRAINING_EXAMPLES = 9850 
 BATCH_SIZE = 256 
 EPOCHS = 50 
@@ -51,9 +51,9 @@ IMAGE_DATA_GENERATOR_TEST_KARGS = dict(
 
 
 FLOW_FROM_DIRECTORY_KARGS = dict(
-    directory='dataset/train_classified', 
+    directory='final/dataset/train_classified', 
     target_size=(224, 224), 
-    color_mode='grayscale', #'rgb', 
+    color_mode='rgb', 
     classes=None, 
     class_mode='categorical', 
     batch_size=256, 

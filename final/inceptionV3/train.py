@@ -32,7 +32,7 @@ model.compile(optimizer='nadam', loss='categorical_crossentropy')
 model.fit_generator( 
     generator=dg.train_generator, 
     steps_per_epoch=int(st.N_TRAINING_EXAMPLES/st.BATCH_SIZE), 
-    epochs=epochs, 
+    epochs=st.EPOCHS, 
     verbose=1, 
     callbacks=[
         ModelCheckpoint(st.MODEL_CHECKPOINT_PATH, monitor='val_acc', save_best_only=True, verbose=1), 

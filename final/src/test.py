@@ -11,7 +11,8 @@ import os
 def predict(model, generator): 
     predicted_probability = model.predict_generator( 
         generator=generator, 
-        steps=len(generator.filenames), 
+        steps=10, 
+        # steps=len(generator.filenames), 
         max_queue_size=10, 
         workers=os.cpu_count(), 
         use_multiprocessing=False, 
@@ -47,7 +48,7 @@ if __name__ == '__main__':
     print('[concate class name to string]')
     class_name_str = pd.DataFrame(prediction_class_name).apply(lambda x: ' '.join(x), axis=1) 
     print('[get image name]')
-    image_name_str = pd.DataFrame(test_generator.filenames).apply(lambda x: os.path.basename(x)) 
+    image_name_str = pd.DataFrame(test_generator.filenames).apply(lambda x: os.path.basename(x[0])) 
     print('[build output table]')
     df = pd.concat([image_name_str, class_name_str], names=['Image', 'Id']) 
     print('[write output file]')

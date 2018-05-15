@@ -34,12 +34,22 @@ if __name__ == '__main__':
     testing_set_dir = sys.argv[3] 
     prediction_output_file = sys.argv[4] 
 
+    print('[load model]')
     model = load_model(model_path) 
+    print('[idx2class]')
     idx2class = get_idx2class(D.get_train_generator(directory=training_set_dir).class_indices) 
-    test_generator = D.get_test_generator(directory=testing_set_dir)
+    print('[get test generator]')
+    test_generator = D.get_test_generator(directory=testing_set_dir) 
+    print('[predict]')
     prediction_idx = predict(model, test_generator) 
+    print('[convert prediction to class name]')
     prediction_class_name = idx2class[prediction_idx] 
+    print('[concate class name to string]')
     class_name_str = pd.DataFrame(prediction_class_name).apply(lambda x: ' '.join(x), axis=1) 
+    print('[get image name]')
     image_name_str = pd.DataFrame(test_generator.filenames).apply(lambda x: os.path.basename(x)) 
+    print('[build output table]')
     df = pd.concat([image_name_str, class_name_str], names=['Image', 'Id']) 
+    print('[write output file]')
     df.to_csv(prediction_output_file)
+    print('[done]')

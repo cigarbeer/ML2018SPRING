@@ -1,6 +1,6 @@
 from keras.preprocessing import image 
 
-def get_train_generator(directory)
+def get_train_generator(directory): 
     train_generator = image.ImageDataGenerator(
         featurewise_center=False, 
         samplewise_center=False, 

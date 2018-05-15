@@ -11,7 +11,7 @@ import os
 def predict(model, generator): 
     predicted_probability = model.predict_generator( 
         generator=generator, 
-        steps=10, 
+        steps=int(len(generator.filenames)/10), 
         # steps=len(generator.filenames), 
         max_queue_size=10, 
         workers=os.cpu_count(), 

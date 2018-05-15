@@ -66,7 +66,7 @@ def get_test_generator(directory):
         color_mode='rgb', 
         classes=None, 
         class_mode=None, 
-        batch_size=1561, 
+        batch_size=10, 
         shuffle=False, 
         seed=0, 
         save_to_dir=None, 

@@ -233,7 +233,7 @@ def build_dictionary(corpus, min_count, max_dct_size):
 
 def split_validation_set(X, y, rate): 
     m, n = X.shape
-    n_train = int(rate * m) 
+    n_train = int((1-rate) * m) 
     train_X = X[:n_train] 
     train_y = y[:n_train] 
     val_X = X[n_train:] 

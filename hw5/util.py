@@ -194,8 +194,8 @@ def load_object(path):
 def get_semisupervised_data(model, uidseqpad, threshold): 
     prob = model.predict(x=uidseqpad, batch_size=st.BATCH_SIZE, verbose=1) 
     # maxprob = np.max(prob, axis=1) 
-    positiveidx = np.where(prob[:, 1] > (1-threshold))[0] 
-    negativeidx = np.where(prob[:, 0] > (1-threshold))[0] 
+    positiveidx = np.where(prob[:, 1] > threshold)[0] 
+    negativeidx = np.where(prob[:, 0] > threshold)[0] 
     positivelabel = np.ones(positiveidx.shape) 
     negativelabel = np.zeros(negativeidx.shape) 
     semilabel = np.concatenate((positivelabel, negativelabel)) 

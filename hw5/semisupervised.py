@@ -42,12 +42,12 @@ if __name__ == '__main__':
     print('[translate unlabel texts to idx sequence]')
     uidseq = texts2idseq(ultexts, hw5.get_tokenizer()) 
     print('[padding to the same length as labeled sequence]') 
-    uidseqpad = pad_idseq(uidsep, max_len=hw5.max_document_size) 
+    uidseqpad = pad_idseq(uidseq, max_len=hw5.max_document_size) 
     print('[semisupervised training]') 
     semimodel = None   
     for i in range(1): 
         print('[predict the label of unlabel data] iter: %d' % i) 
-        semilabel, semiidseqpad = get_semisupervised_data(hw5.load_semisupervised_rnn_model(), ulidseqpad, threshold=st.SEMISUPERVISED_THRESHOLD)
+        semilabel, semiidseqpad = get_semisupervised_data(hw5.load_semisupervised_rnn_model(), uidseqpad, threshold=st.SEMISUPERVISED_THRESHOLD)
         print('[concatenate semisupervised data and label data] iter: %d' % i) 
         label_cat = np.concatenate((label, semilabel)) 
         idseqpad_cat = np.concatenate((idseqpad, semiidseqpad)) 

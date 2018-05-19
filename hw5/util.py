@@ -191,15 +191,15 @@ def load_object(path):
         f.close()
     return obj 
 
-def get_semisupervised_data(model, ulidseqpad, threshold): 
-    prob = model.predict(x=ulidseqpad, batch_size=st.BATCH_SIZE, verbose=1) 
-    maxprob = np.max(prob, axis=1) 
-    positiveidx = np.where(maxprob > (1-threshold)) 
-    negativeidx = np.where(maxprob < threshold) 
+def get_semisupervised_data(model, uidseqpad, threshold): 
+    prob = model.predict(x=uidseqpad, batch_size=st.BATCH_SIZE, verbose=1) 
+    # maxprob = np.max(prob, axis=1) 
+    positiveidx = np.where(maxprob[:, 1] > (1-threshold))[0] 
+    negativeidx = np.where(maxprob[:, 0] > (1-threshold))[0] 
     positivelabel = np.ones(positiveidx.shape) 
     negativelabel = np.zeros(negativeidx.shape) 
     semilabel = np.concatenate((positivelabel, negativelabel)) 
-    semidata = np.concatenate((ulidseqpad[positiveidx], ulidseqpad[negativeidx]))
+    semidata = np.concatenate((uidseqpad[positiveidx], uidseqpad[negativeidx]))
     return semilabel, semidata
 
 def texts2bow(texts, dct): 

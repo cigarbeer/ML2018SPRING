@@ -232,13 +232,13 @@ def build_dictionary(corpus, min_count, max_dct_size):
     return dct 
 
 def split_validation_set(X, y, rate): 
-    m ,n = X.shape
+    m, n = X.shape
     n_train = int(rate * m) 
     train_X = X[:n_train] 
     train_y = y[:n_train] 
     val_X = X[n_train:] 
     val_y = y[n_train:] 
-    return (train_X, train_y), (val_X, val_y) 
+    return (train_X, train_y), (val_X, to_categorical(val_y)) 
 
 class Hw5:
     def __init__(self): 

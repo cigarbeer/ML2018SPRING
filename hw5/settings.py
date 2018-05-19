@@ -15,7 +15,7 @@ RNN_MODEL_CHECKPOINT_PATH = './rnn.hdf5'
 SEMISUPERVISED_RNN_MODEL_CHECKPOINT_PATH = './semirnn.hdf5' 
 HW5_MODEL_PATH = './hw5.pickle' 
 
-SEMISUPERVISED_THRESHOLD = 0.7
+SEMISUPERVISED_THRESHOLD = 0.8
 
 STOPWORDS = set(['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 
 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 

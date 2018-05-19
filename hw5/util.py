@@ -191,6 +191,16 @@ def load_object(path):
         f.close()
     return obj 
 
+def get_semisupervised_data(model, ulidseqpad, threshold): 
+    prob = model.predict(x=ulidseqpad, batch_size=st.BATCH_SIZE, verbose=1) 
+    maxprob = np.max(prob, axis=1) 
+    positiveidx = np.where(maxprob > (1-threshold)) 
+    negativeidx = np.where(maxprob < threshold) 
+    positivelabel = np.ones(positiveidx.shape) 
+    negativelabel = np.zeros(negativeidx.shape) 
+    semilabel = np.concatenate((positivelabel, negativelabel)) 
+    semidata = np.concatenate((ulidseqpad[positiveidx], ulidseqpad[negativeidx]))
+    return semilabel, semidata
 
 def texts2bow(texts, dct): 
     corpus = texts2corpus(texts) 
@@ -252,4 +262,7 @@ class Hw5:
 
     def load_rnn_model(self): 
         return load_model(st.RNN_MODEL_CHECKPOINT_PATH) 
+
+    def load_semisupervised_rnn_model(self): 
+        return load_model(st.SEMISUPERVISED_RNN_MODEL_CHECKPOINT_PATH) 
 

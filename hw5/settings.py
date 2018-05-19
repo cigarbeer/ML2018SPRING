@@ -12,7 +12,10 @@ EPOCHS = 200
 VALIDATION_SPLIT = 0.1 
 
 RNN_MODEL_CHECKPOINT_PATH = './rnn.hdf5' 
+SEMISUPERVISED_RNN_MODEL_CHECKPOINT_PATH = './semirnn.hdf5' 
 HW5_MODEL_PATH = './hw5.pickle' 
+
+SEMISUPERVISED_THRESHOLD = 0.7
 
 STOPWORDS = set(['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 
 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 

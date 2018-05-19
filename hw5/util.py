@@ -172,7 +172,7 @@ def train(model, X, y, batch_size, epochs, validation_split=0.0, save_model_path
 
 def bow_classifier(input_shape):  
     model = Sequential() 
-    model.add(Reshape(target_shape=input_shape))
+    model.add(Reshape(target_shape=input_shape, input_shape=input_shape))
 
     model.add(Dense(units=256, activation='selu')) 
     model.add(Dropout(rate=st.DENSE_DROPOUT_RATE)) 

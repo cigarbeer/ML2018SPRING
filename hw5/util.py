@@ -292,3 +292,5 @@ class Hw5:
     def load_semisupervised_rnn_model(self): 
         return load_model(st.SEMISUPERVISED_RNN_MODEL_CHECKPOINT_PATH) 
 
+    def load_bow_model(self): 
+        return load_model(st.BOW_MODEL_CHECKPOINT_PATH) 

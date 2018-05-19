@@ -134,7 +134,7 @@ def wordvector_rnn_classifier(wordvector, tokenizer, max_document_size):
     return model 
 
 
-def train(model, X, y, batch_size, epochs, validation_split, save_model_path): 
+def train(model, X, y, batch_size, epochs, validation_split=0.0, save_model_path=None, validation_data=None): 
     # (train_X, train_y), (val_X, val_y) = split_validation_set(X, y, rate=0.1) 
     callbacks = [
         EarlyStopping(
@@ -159,7 +159,7 @@ def train(model, X, y, batch_size, epochs, validation_split, save_model_path):
         verbose=1, 
         callbacks=callbacks, 
         validation_split=validation_split, 
-        validation_data=None, 
+        validation_data=validation_data, 
         shuffle=True, 
         # class_weight=None, 
         # sample_weight=None, 

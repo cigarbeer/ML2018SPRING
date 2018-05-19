@@ -23,6 +23,7 @@ from keras.layers import Embedding
 from keras.layers import GRU 
 from keras.layers import Dense 
 from keras.layers import Dropout 
+from keras.layers import Input 
 from keras.callbacks import EarlyStopping 
 from keras.callbacks import ModelCheckpoint 
  
@@ -168,6 +169,31 @@ def train(model, X, y, batch_size, epochs, validation_split=0.0, save_model_path
         # validation_steps=None
     ) 
     return model 
+
+def bow_classifier(input_shape):  
+    model = Sequential() 
+    model.add(Input(shape=input_shape))
+
+    model.add(Dense(units=256, activation='selu')) 
+    model.add(Dropout(rate=st.DENSE_DROPOUT_RATE)) 
+    model.add(Dense(units=128, activation='selu')) 
+    model.add(Dropout(rate=st.DENSE_DROPOUT_RATE)) 
+    model.add(Dense(units=64, activation='selu')) 
+    model.add(Dropout(rate=st.DENSE_DROPOUT_RATE)) 
+    model.add(Dense(units=128, activation='selu')) 
+    model.add(Dropout(rate=st.DENSE_DROPOUT_RATE)) 
+    model.add(Dense(units=256, activation='selu')) 
+    model.add(Dropout(rate=st.DENSE_DROPOUT_RATE)) 
+
+    model.add(Dense(units=2, activation='softmax')) 
+    model.summary() 
+
+    model.compile(
+        optimizer='nadam', 
+        loss='categorical_crossentropy', 
+        metrics=['accuracy']
+    ) 
+    return model
 
 def predict(model, t, batch_size): 
     prob = model.predict(x=t, batch_size=batch_size, verbose=1) 

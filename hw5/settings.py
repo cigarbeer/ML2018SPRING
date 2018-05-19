@@ -2,20 +2,20 @@ SEED = 0
 WORDVECTOR_DIM = 256 
 WORDVECTOR_WINDOW = 7 
 WORDVECTOR_MIN_COUNT = 3
-WORDVECTOR_N_ITER = 3
+WORDVECTOR_N_ITER = 30
 
 DENSE_DROPOUT_RATE = 0.2
 RNN_DROPOUT_RATE = 0.3 
 
-BATCH_SIZE = 128  
-EPOCHS = 100  
+BATCH_SIZE = 256  
+EPOCHS = 30   
 VALIDATION_SPLIT = 0.1 
 
 RNN_MODEL_CHECKPOINT_PATH = './rnn.hdf5' 
 SEMISUPERVISED_RNN_MODEL_CHECKPOINT_PATH = './semirnn.hdf5' 
 HW5_MODEL_PATH = './hw5.pickle' 
 
-SEMISUPERVISED_THRESHOLD = 0.8
+SEMISUPERVISED_THRESHOLD = 0.9
 
 STOPWORDS = set(['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 
 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 

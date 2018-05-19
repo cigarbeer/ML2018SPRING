@@ -47,7 +47,7 @@ if __name__ == '__main__':
     uidseqpad = pad_idseq(uidseq, max_len=hw5.max_document_size) 
     print('[semisupervised training]') 
     semimodel = None   
-    for i in range(1): 
+    for i in range(5): 
         print('[predict the label of unlabel data] iter: %d' % i) 
         semilabel, semiidseqpad = get_semisupervised_data(hw5.load_semisupervised_rnn_model(), uidseqpad, threshold=st.SEMISUPERVISED_THRESHOLD)
         print('[concatenate semisupervised data and label data] iter: %d' % i) 

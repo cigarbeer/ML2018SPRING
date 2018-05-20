@@ -10,7 +10,7 @@ if __name__ == '__main__':
     print('[get bow]') 
     tkn = hw5.get_tokenizer()
     tkn.num_words = st.BOW_MAX_NUM_WORDS 
-    bow = tkn.texts_to_matrix(ltexts, mode='tfidf')
+    bow = tkn.texts_to_matrix(ttexts, mode='tfidf')
     m, n = bow.shape 
     # print('[translate texts to idx sequence]') 
     # idseq = texts2idseq(ttexts, hw5.get_tokenizer()) 

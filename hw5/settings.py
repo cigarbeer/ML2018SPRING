@@ -18,7 +18,7 @@ HW5_MODEL_PATH = './hw5.pickle'
 
 SEMISUPERVISED_THRESHOLD = 0.9 
 
-BOW_MAX_NUM_WORDS = 10000 
+BOW_MAX_NUM_WORDS = 5000 
 
 STOPWORDS = set(['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 
 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 

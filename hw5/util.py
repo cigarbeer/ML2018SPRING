@@ -314,3 +314,6 @@ class Hw5:
 
     def load_bow_model(self): 
         return load_model(st.BOW_MODEL_CHECKPOINT_PATH) 
+
+    def load_punctuation_model(self): 
+        return load_model(st.PUNCTUATION_MODEL_CHECKPOINT_PATH) 

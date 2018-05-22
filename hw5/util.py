@@ -64,6 +64,17 @@ def build_tokenizer(texts, num_words=None):
     tkn.fit_on_texts(texts) 
     return tkn 
 
+def build_tokenizer_with_punctuation(texts, num_words=None): 
+    tkn = Tokenizer(
+        num_words=num_words, 
+        filters='\t\n', 
+        lower=True, 
+        split=' ', 
+        char_level=False 
+    ) 
+    tkn.fit_on_texts(texts) 
+    return tkn 
+
 def texts2idseq(texts, tokenizer): 
     return tokenizer.texts_to_sequences(texts) 
 
@@ -270,6 +281,7 @@ class Hw5:
     def __init__(self): 
         self.max_document_size = None 
         self.tokenizer = None 
+        self.tokenizer_with_punctuation = None 
         self.wordvector = None 
     
     def get_wordvector(self, corpus=None): 
@@ -285,6 +297,14 @@ class Hw5:
         if self.tokenizer is None: 
             self.tokenizer = build_tokenizer(texts) 
         return self.tokenizer 
+
+    def get_tokenizer_with_punctuation(self, texts=None):
+        if texts is None: 
+            return self.tokenizer_with_punctuation 
+        if self.tokenizer_with_punctuation is None: 
+            self.tokenizer_with_punctuation = build_tokenizer_with_punctuation(texts) 
+        return self.tokenizer_with_punctuation 
+
 
     def load_rnn_model(self): 
         return load_model(st.RNN_MODEL_CHECKPOINT_PATH) 

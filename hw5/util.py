@@ -49,7 +49,8 @@ def concat_data(label_texts, unlabel_texts):
 
 def texts2corpus(texts): 
     def split_texts(texts):
-        return texts.apply(text_to_word_sequence, lower=True, split=' ')
+        # return texts.apply(text_to_word_sequence, lower=True, split=' ')
+        return texts.apply(text_to_word_sequence, lower=True, split=' ', filters='\t\n')
     return split_texts(texts) 
 
 

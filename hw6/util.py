@@ -69,7 +69,7 @@ def get_matrix_factorization_model(matrix_shape, latent_dimension):
 
 def train(model, X, y, batch_size, epochs, validation_split, model_checkpoint_path): 
     callbacks = [
-        EarlyStopping(monitor='val_loss', min_delta='1e-4', patience=10, verbose=1), 
+        EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=10, verbose=1), 
         ModelCheckpoint(filepath=model_checkpoint_path, monitor='val_loss', save_best_only=True, save_weights_only=False, verbose=1) 
     ]
 

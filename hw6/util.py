@@ -24,8 +24,8 @@ from setting import *
 def read_training_data(path): 
     df = pd.read_csv(path) 
     df = df.sample(frac=1, replace=False) 
-    uid = df.UserID 
-    mid = df.MovieID  
+    uid = df.UserID.astype(np.int32) 
+    mid = df.MovieID.astype(np.int32) 
     rating = df.Rating.astype(np.float32) 
     return uid, mid, rating 
 

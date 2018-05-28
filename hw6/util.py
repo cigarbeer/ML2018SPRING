@@ -38,6 +38,8 @@ def normalize_rating(rating):
 
 def get_matrix_factorization_model(matrix_shape, latent_dimension): 
     m, n = matrix_shape 
+    m = m + 1
+    n = n + 1 
 
     input_m = Input(shape=(1,)) 
     input_n = Input(shape=(1,)) 

@@ -11,8 +11,8 @@ if __name__ == '__main__':
     print('[normalize rating]')
     rating_normalized = normalize_rating(rating) 
     print('[get number of users and movies]')
-    (n_users,) = uid.unique().shape 
-    (n_movies,) = mid.unique().shape 
+    n_users = uid.max() 
+    n_movies = mid.max() 
     print('[build matrix factorization model]')
     model = get_matrix_factorization_model(matrix_shape=(n_users, n_movies), latent_dimension=LATENT_DIMENSION) 
     print('[start training]')

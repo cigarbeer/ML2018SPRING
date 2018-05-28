@@ -102,7 +102,7 @@ def read_testing_data(path):
     df = pd.read_csv(path) 
     tuid = df.UserID 
     tmid = df.MovieID 
-    return tuid, muid 
+    return tuid, tmid  
 
 def load_matrix_factorization_model(): 
     return load_model(MATRIX_FACTORIZATION_CHECKPOINT_PATH) 

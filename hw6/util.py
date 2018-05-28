@@ -27,7 +27,7 @@ def read_training_data(path):
     uid = df.UserID 
     mid = df.MovieID  
     rating = df.Rating 
-    return uid.values, mid.values, rating.values 
+    return uid, mid, rating 
 
 def normalize_rating(rating): 
     mu = np.mean(rating) 

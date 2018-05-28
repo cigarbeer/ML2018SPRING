@@ -11,8 +11,12 @@ if __name__ == '__main__':
     movies_data_path = sys.argv[3] 
     users_data_path = sys.argv[4] 
 
-    tuid, tmid = read_testing_data(test_data_path)  
+    print('[read testing data]')
+    tuid, tmid = read_testing_data(test_data_path) 
+    print('[load matrix factorization model]')
     model = load_matrix_factorization_model() 
+    print('[make prediction]')
     pred = predict(model, t=[tuid, tmid], batch_size=BATCH_SIZE) 
-    write_prediction(pred, output_file_path) 
-    
+    print('[write prediction]')
+    write_prediction(pred, output_file_path)  
+    print('[done]')

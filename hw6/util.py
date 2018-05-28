@@ -26,7 +26,7 @@ def read_training_data(path):
     df = df.sample(frac=1, replace=False) 
     uid = df.UserID 
     mid = df.MovieID  
-    rating = df.Rating 
+    rating = df.Rating.astype(np.float32) 
     return uid, mid, rating 
 
 def normalize_rating(rating): 

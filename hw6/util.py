@@ -95,7 +95,7 @@ def predict(model, t, batch_size):
 def write_prediction(pred, path): 
     df = pd.DataFrame(columns=['Rating'], data=pred) 
     df.index = df.index + 1 
-    df.to_csv(path, index=True, index_label='TestDataID') 
+    df.to_csv(path, index=True, index_label='TestDataID', float_format='%.3f') 
     return df 
 
 def read_testing_data(path): 

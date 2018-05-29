@@ -1,10 +1,15 @@
 # TRAINING_SET_DIR = '../dataset/train_classified' 
 N_TRAINING_EXAMPLES = 9850 
+N_CLASSES = 4251 
 BATCH_SIZE = 256 
 EPOCHS = 30 
+N_XGB_TRAINING_EXAMPLES = 614400 
+FEATURE_DIM = 512  
+
 
 MODEL_CHECKPOINT_PATH = './model.hdf5'
 FEATURE_EXTRACTOR_PATH = './feature_extractor.hdf5' 
+XGB_MODEL_PATH = './xgb.model' 
 
 IMAGE_DATA_GENERATOR_TRAIN_KARGS = dict(
     featurewise_center=False, 
@@ -57,7 +62,7 @@ FLOW_FROM_DIRECTORY_KARGS = dict(
     color_mode='rgb', 
     classes=None, 
     class_mode='categorical', 
-    batch_size=256, 
+    batch_size=BATCH_SIZE, 
     shuffle=True, 
     seed=0, 
     save_to_dir=None, 

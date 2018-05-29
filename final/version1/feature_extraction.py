@@ -16,12 +16,12 @@ from keras.callbacks import ReduceLROnPlateau
 
 import settings as st 
 
-def train_feature_extractor(training_set_directory):
+def train_feature_extractor(train_generator, test_generator):
     base_model = InceptionV3(input_tensor=Input(shape=(224, 224, 3)), weights='imagenet', include_top=False) 
     x = base_model.output 
     x = GlobalAveragePooling2D()(x) 
-    features = Dense(units=1024, activation='selu', name='features')(x) 
-    predictions = Dense(units=4251, activation='softmax')(features)  
+    features = Dense(units=st.FEATURE_DIM, activation='selu', name='features')(x) 
+    predictions = Dense(units=st.N_CLASSES, activation='softmax')(features)  
     model = Model(inputs=base_model.input, outputs=predictions) 
 
     for layer in base_model.layers: 
@@ -29,11 +29,11 @@ def train_feature_extractor(training_set_directory):
 
     model.compile(optimizer='nadam', loss='categorical_crossentropy') 
 
-    train_datagen = ImageDataGenerator(**st.IMAGE_DATA_GENERATOR_TRAIN_KARGS) 
-    test_datagen = ImageDataGenerator(**st.IMAGE_DATA_GENERATOR_TEST_KARGS) 
+    # train_datagen = ImageDataGenerator(**st.IMAGE_DATA_GENERATOR_TRAIN_KARGS) 
+    # test_datagen = ImageDataGenerator(**st.IMAGE_DATA_GENERATOR_TEST_KARGS) 
 
-    train_generator = train_datagen.flow_from_directory(directory=training_set_directory, **st.FLOW_FROM_DIRECTORY_KARGS) 
-    test_generator = test_datagen.flow_from_directory(directory=training_set_directory, **st.FLOW_FROM_DIRECTORY_KARGS) 
+    # train_generator = train_datagen.flow_from_directory(directory=training_set_directory, **st.FLOW_FROM_DIRECTORY_KARGS) 
+    # test_generator = test_datagen.flow_from_directory(directory=training_set_directory, **st.FLOW_FROM_DIRECTORY_KARGS) 
 
     model.fit_generator( 
         generator=train_generator, 

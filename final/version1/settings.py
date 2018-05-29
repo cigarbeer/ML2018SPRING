@@ -1,9 +1,10 @@
-TRAINING_SET_DIR = '../dataset/train_classified' 
+# TRAINING_SET_DIR = '../dataset/train_classified' 
 N_TRAINING_EXAMPLES = 9850 
 BATCH_SIZE = 256 
 EPOCHS = 30 
 
-MODEL_CHECKPOINT_PATH = 'final/model.hdf5'
+MODEL_CHECKPOINT_PATH = './model.hdf5'
+FEATURE_EXTRACTOR_PATH = './feature_extractor.hdf5' 
 
 IMAGE_DATA_GENERATOR_TRAIN_KARGS = dict(
     featurewise_center=False, 
@@ -51,7 +52,7 @@ IMAGE_DATA_GENERATOR_TEST_KARGS = dict(
 
 
 FLOW_FROM_DIRECTORY_KARGS = dict(
-    directory=TRAINING_SET_DIR, 
+    # directory=TRAINING_SET_DIR, 
     target_size=(224, 224), 
     color_mode='rgb', 
     classes=None, 

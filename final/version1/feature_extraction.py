@@ -15,7 +15,7 @@ from keras.callbacks import ReduceLROnPlateau
 
 import settings as st 
 
-def train_feature_extractor():
+def train_feature_extractor(training_set_dir):
     base_model = InceptionV3(input_tensor=Input(shape=(224, 224, 3)), weights='imagenet', include_top=False) 
     x = base_model.output 
     x = GlobalAveragePooling2D()(x) 
@@ -31,8 +31,8 @@ def train_feature_extractor():
     train_datagen = ImageDataGenerator(**st.IMAGE_DATA_GENERATOR_TRAIN_KARGS) 
     test_datagen = ImageDataGenerator(**st.IMAGE_DATA_GENERATOR_TEST_KARGS) 
 
-    train_generator = train_datagen.flow_from_directory(**st.FLOW_FROM_DIRECTORY_KARGS) 
-    test_generator = test_datagen.flow_from_directory(**st.FLOW_FROM_DIRECTORY_KARGS) 
+    train_generator = train_datagen.flow_from_directory(directory=training_set_dir, **st.FLOW_FROM_DIRECTORY_KARGS) 
+    test_generator = test_datagen.flow_from_directory(directory=training_set_dir, **st.FLOW_FROM_DIRECTORY_KARGS) 
 
     model.fit_generator( 
         generator=train_generator, 
@@ -79,4 +79,4 @@ def train_feature_extractor():
 
     return model 
 
-train_feature_extractor()
+# train_feature_extractor()

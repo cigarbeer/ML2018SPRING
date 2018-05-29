@@ -9,6 +9,8 @@ FEATURE_DIM = 512
 
 MODEL_CHECKPOINT_PATH = './model.hdf5'
 FEATURE_EXTRACTOR_PATH = './feature_extractor.hdf5' 
+DTRAIN_PATH = './dtrain.pickle'
+DLABEL_PATH = './dlabel.pickle' 
 XGB_MODEL_PATH = './xgb.model' 
 
 IMAGE_DATA_GENERATOR_TRAIN_KARGS = dict(

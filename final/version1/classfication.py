@@ -16,6 +16,9 @@ def get_dmatrix(feature_extractor, generator):
     dlabel = np.zeros((st.N_XGB_TRAINING_EXAMPLES, st.N_CLASSES)) 
     start = 0
     for X, y in generator: 
+        batch_size, _ = X.shape 
+        if not (batch_size == st.BATCH_SIZE): 
+            continue 
         print('start position', start) 
         print('X shape', X.shape) 
         print('y shape', y.shape) 
@@ -25,7 +28,8 @@ def get_dmatrix(feature_extractor, generator):
         start = start + st.BATCH_SIZE 
         if start == st.N_XGB_TRAINING_EXAMPLES:
             break 
-
+    save_object(dtrain, st.DTRAIN_PATH) 
+    save_object(dlabel, st.DLABEL_PATH) 
     # return xgb.DMatrix(data=dtrain, label=dlabel)
     return dtrain, dlabel  
 

@@ -13,16 +13,18 @@ def save_object(obj, path):
 
 def get_dmatrix(feature_extractor, generator): 
     dtrain = np.zeros((st.N_XGB_TRAINING_EXAMPLES, st.FEATURE_DIM)) 
-    dlabel = np.zeros((st.N_XGB_TRAINING_EXAMPLES, st.N_CLASSES)) 
+    dlabel = np.zeros((st.N_XGB_TRAINING_EXAMPLES,)) 
+    # dlabel = np.zeros((st.N_XGB_TRAINING_EXAMPLES, st.N_CLASSES)) 
     start = 0
     for X, y in generator: 
         batch_size, *_ = X.shape 
         if not (batch_size == st.BATCH_SIZE): 
             continue 
         print('start position', start) 
+        X = feature_extractor.predict(X, batch_size=st.BATCH_SIZE, verbose=1)  
+        y = np.argmax(y, axis=1) 
         print('X shape', X.shape) 
         print('y shape', y.shape) 
-        X = feature_extractor.predict(X, batch_size=st.BATCH_SIZE, verbose=1)  
         dtrain[start:start+st.BATCH_SIZE] = X 
         dlabel[start:start+st.BATCH_SIZE] = y 
         start = start + st.BATCH_SIZE 
@@ -38,3 +40,11 @@ def train_xgb_classifier(dtrain, dlabel):
     xgbc.fit(dtrain, dlabel) 
     save_object(xgbc, st.XGB_MODEL_PATH) 
     return xgbc 
+
+def predict(feature_extractor, xgb_classifier, generator): 
+    n_testing_examples = len(generator.filenames) 
+    t = np.zeros((n_testing_examples, st.FEATURE_DIM)) 
+    for X, y in generator: 
+         X = feature_extractor.predict(X) 
+
+    pred = model.predict(t)

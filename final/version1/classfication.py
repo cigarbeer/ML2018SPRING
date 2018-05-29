@@ -22,7 +22,7 @@ def get_dmatrix(feature_extractor, generator):
         print('start position', start) 
         print('X shape', X.shape) 
         print('y shape', y.shape) 
-        X = feature_extractor.predict(X, batch_size=st.BATCH_SIZE)  
+        X = feature_extractor.predict(X, batch_size=st.BATCH_SIZE, verbose=1)  
         dtrain[start:start+st.BATCH_SIZE] = X 
         dlabel[start:start+st.BATCH_SIZE] = y 
         start = start + st.BATCH_SIZE 

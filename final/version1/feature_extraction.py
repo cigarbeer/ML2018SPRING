@@ -61,7 +61,7 @@ def train_feature_extractor(train_generator, test_generator):
     model.compile(optimizer='nadam', loss='categorical_crossentropy') 
 
     model.fit_generator( 
-        generator=dg.train_generator, 
+        generator=train_generator, 
         steps_per_epoch=int(st.N_TRAINING_EXAMPLES/st.BATCH_SIZE), 
         epochs=st.EPOCHS, 
         verbose=1, 
@@ -69,7 +69,7 @@ def train_feature_extractor(train_generator, test_generator):
             ModelCheckpoint(st.FEATURE_EXTRACTOR_PATH, monitor='val_loss', save_best_only=True, verbose=1), 
             EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=10, verbose=1)
         ], 
-        validation_data=dg.test_generator, 
+        validation_data=test_generator, 
         validation_steps=int(st.N_TRAINING_EXAMPLES/st.BATCH_SIZE), 
         class_weight=None, 
         max_queue_size=10, 

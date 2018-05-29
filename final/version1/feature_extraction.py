@@ -4,6 +4,7 @@ from keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator 
 
 from keras.models import Model 
+from keras.models import load_model 
 
 from keras.layers import Dense 
 from keras.layers import GlobalAveragePooling2D 
@@ -40,7 +41,7 @@ def train_feature_extractor(training_set_directory):
         epochs=st.EPOCHS, 
         verbose=1, 
         callbacks=[
-            ModelCheckpoint(st.MODEL_CHECKPOINT_PATH, monitor='val_loss', save_best_only=True, verbose=1), 
+            ModelCheckpoint(st.FEATURE_EXTRACTOR_PATH, monitor='val_loss', save_best_only=True, verbose=1), 
             EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=10, verbose=1)
         ], 
         validation_data=test_generator, 
@@ -65,7 +66,7 @@ def train_feature_extractor(training_set_directory):
         epochs=st.EPOCHS, 
         verbose=1, 
         callbacks=[
-            ModelCheckpoint(st.MODEL_CHECKPOINT_PATH, monitor='val_loss', save_best_only=True, verbose=1), 
+            ModelCheckpoint(st.FEATURE_EXTRACTOR_PATH, monitor='val_loss', save_best_only=True, verbose=1), 
             EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=10, verbose=1)
         ], 
         validation_data=dg.test_generator, 
@@ -79,4 +80,7 @@ def train_feature_extractor(training_set_directory):
 
     return model 
 
-# train_feature_extractor()
+def load_feature_extractor():   
+    model = load_model(st.FEATURE_EXTRACTOR_PATH) 
+    feature_extractor = Model(inputs=model.input, outputs=model.get_layer('features').output) 
+    return feature_extractor 

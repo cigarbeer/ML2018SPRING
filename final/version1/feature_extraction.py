@@ -12,7 +12,7 @@ from keras.callbacks import EarlyStopping
 from keras.callbacks import ModelCheckpoint 
 from keras.callbacks import ReduceLROnPlateau 
 
-from . import settings as st 
+import settings as st 
 
 def train_feature_extractor():
     base_model = InceptionV3(input_tensor=Input(shape=(224, 224, 3)), weights='imagenet', include_top=False) 

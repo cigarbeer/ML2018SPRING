@@ -16,6 +16,9 @@ def get_dmatrix(feature_extractor, generator):
     dlabel = np.zeros((st.N_XGB_TRAINING_EXAMPLES, st.N_CLASSES)) 
     start = 0
     for X, y in generator: 
+        print('start position', start) 
+        print('X shape', X.shape) 
+        print('y shape', y.shape) 
         X = feature_extractor.predict(X) 
         dtrain[start:start+st.BATCH_SIZE] = X 
         dlabel[start:start+st.BATCH_SIZE] = y 

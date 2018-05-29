@@ -78,3 +78,4 @@ def train_feature_extractor():
 
     return model 
 
+train_feature_extractor()

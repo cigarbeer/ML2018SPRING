@@ -22,8 +22,8 @@ if __name__ == '__main__':
     print('[load feature extractor]')
     feature_extractor = load_feature_extractor()
 
-    print('[get xgb dmatrix]')
-    dtrain, dlabel = get_dmatrix(feature_extractor, train_generator) 
+#   print('[get xgb dmatrix]')
+#   dtrain, dlabel = get_dmatrix(feature_extractor, train_generator) 
 
-    print('[train xgb classifier]')
-    train_xgb_classifier(dtrain, dlabel) 
+#   print('[train xgb classifier]')
+#   train_xgb_classifier(dtrain, dlabel) 

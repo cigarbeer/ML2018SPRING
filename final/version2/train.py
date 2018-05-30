@@ -4,7 +4,7 @@ import os
 import settings as st 
 
 from feature_extraction import *
-from classfication import * 
+from classification import * 
 
 if __name__ == '__main__': 
     training_set_directory = sys.argv[1] 

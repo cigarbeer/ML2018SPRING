@@ -21,7 +21,7 @@ def get_dmatrix(feature_extractor, generator):
         if not (batch_size == st.BATCH_SIZE): 
             continue 
         print('start position', start) 
-        X = feature_extractor.predict(X, batch_size=st.FEATURE_EXTRACTION_BATCH_SIZE, verbose=1)  
+        X = feature_extractor.predict(X, batch_size=st.BATCH_SIZE, verbose=1)  
         y = np.argmax(y, axis=1) 
         print('X shape', X.shape) 
         print('y shape', y.shape) 

@@ -20,6 +20,7 @@ def train_feature_extractor(train_generator, test_generator):
     base_model = InceptionV3(input_tensor=Input(shape=(224, 224, 3)), weights='imagenet', include_top=False) 
     x = base_model.output 
     x = GlobalAveragePooling2D()(x) 
+    x = Dense(units=st.FEATURE_DIM, activation='selu', name='features')(x) 
     features = Dense(units=st.FEATURE_DIM, activation='selu', name='features')(x) 
     predictions = Dense(units=st.N_CLASSES, activation='softmax')(features)  
     model = Model(inputs=base_model.input, outputs=predictions) 

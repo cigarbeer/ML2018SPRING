@@ -11,7 +11,7 @@ def read_image_class_mapping(file_name):
     return mapping 
 
 def get_n_major_mapping(n, mapping): 
-    sorted_mapping = mapping.groupby(by=['Id']).count().sort_values(by=['Image'], ascending=False)
+    sorted_mapping = mapping.groupby(by=['Id'], as_index=False).count().sort_values(by=['Image'], ascending=False)
     n_major_ids = sorted_mapping.head(n)['Id'] 
     n_major_mapping = mapping[mapping['Id'].isin(n_major_ids)] 
     return n_major_mapping 

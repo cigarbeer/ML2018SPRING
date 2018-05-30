@@ -1,4 +1,4 @@
-TRAINING_SET_DIR = 'final/dataset/train_top_n_classified' 
+TRAINING_SET_DIR = '../dataset/train_top_n_classified' 
 N_TRAINING_EXAMPLES = 9850 
 BATCH_SIZE = 256 
 EPOCHS = 20 

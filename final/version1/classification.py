@@ -9,7 +9,14 @@ def save_object(obj, path):
     with open(path, mode='wb') as f: 
         pickle.dump(obj, f)
         f.close() 
-    return 
+    return obj 
+
+def load_object(path): 
+    obj = None 
+    with open(path, mode='rb') as f: 
+        obj = pickle.load(f)
+        f.close() 
+    return obj 
 
 def get_dmatrix(feature_extractor, generator): 
     dtrain = np.zeros((st.N_XGB_TRAINING_EXAMPLES, st.FEATURE_DIM)) 

@@ -39,9 +39,12 @@ if __name__ == '__main__':
     src_dir = sys.argv[1] 
     dst_dir = sys.argv[2] 
     image_class_mapping_file = sys.argv[3] 
+    top_n_class = int(sys.argv[4]) 
+    if top_n_class == 0:
+        top_n_class = st.N_CLASSES 
 
     mapping = read_image_class_mapping(image_class_mapping_file) 
-    mapping = get_n_major_mapping(st.TOP_N_CLASS, mapping) 
+    mapping = get_n_major_mapping(top_n_class, mapping) 
     safe_mkdir(dst_dir) 
     unique_ids = mapping.Id.unique() 
     mkdir_by_ids(dst_dir, unique_ids) 

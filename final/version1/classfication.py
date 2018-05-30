@@ -36,7 +36,7 @@ def get_dmatrix(feature_extractor, generator):
     return dtrain, dlabel  
 
 def train_xgb_classifier(dtrain, dlabel): 
-    xgbc = xgb.XGBClassifier(objective='multi:softmax') 
+    xgbc = xgb.XGBClassifier(objective='multi:softmax', silent=False)  
     xgbc.fit(dtrain, dlabel) 
     save_object(xgbc, st.XGB_MODEL_PATH) 
     return xgbc 

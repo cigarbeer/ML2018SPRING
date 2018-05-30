@@ -11,8 +11,8 @@ from keras.callbacks import ModelCheckpoint
 
 from keras import backend as K 
 
-from final.util import settings as st 
-from final.util import datagen as dg 
+import settings as st 
+import datagen as dg 
 
 base_model = InceptionV3(input_tensor=Input(shape=(224, 224, 3)), weights='imagenet', include_top=False) 
 

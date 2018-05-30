@@ -38,7 +38,7 @@ model.fit_generator(
     callbacks=[
         ModelCheckpoint(st.MODEL_CHECKPOINT_PATH, monitor='val_loss', save_best_only=True, verbose=1), 
         EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=10, verbose=1),
-        ReduceLROnPlateau(monitor='loss', factor=0.1, patience=2, cooldown=2, min_lr=1e-5)
+        ReduceLROnPlateau(monitor='loss', factor=0.1, patience=2, cooldown=2, min_lr=1e-5, verbose=1)
     ], 
     validation_data=dg.test_generator, 
     validation_steps=int(st.N_TRAINING_EXAMPLES/st.BATCH_SIZE), 
@@ -64,7 +64,7 @@ model.fit_generator(
     callbacks=[
         ModelCheckpoint(st.MODEL_CHECKPOINT_PATH, monitor='val_loss', save_best_only=True, verbose=1), 
         EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=10, verbose=1), 
-        ReduceLROnPlateau(monitor='loss', factor=0.1, patience=2, cooldown=2, min_lr=1e-5)
+        ReduceLROnPlateau(monitor='loss', factor=0.1, patience=2, cooldown=2, min_lr=1e-5, verbose=1)
     ], 
     validation_data=dg.test_generator, 
     validation_steps=int(st.N_TRAINING_EXAMPLES/st.BATCH_SIZE), 

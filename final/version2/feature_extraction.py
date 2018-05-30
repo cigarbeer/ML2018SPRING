@@ -9,6 +9,7 @@ from keras.models import load_model
 from keras.layers import Dense 
 from keras.layers import GlobalAveragePooling2D 
 from keras.layers import Input 
+from keras.layers import Dropout 
 
 from keras.callbacks import EarlyStopping 
 from keras.callbacks import ModelCheckpoint 
@@ -23,6 +24,7 @@ def train_feature_extractor(train_generator, test_generator):
     x = base_model.output 
     x = GlobalAveragePooling2D()(x) 
     x = Dense(units=st.FEATURE_DIM, activation='selu')(x) 
+    x = Dropout(rate=0.5)(x) 
     features = Dense(units=st.FEATURE_DIM, activation='selu', name='features')(x) 
     predictions = Dense(units=train_generator.num_class, activation='softmax')(features)  
     model = Model(inputs=base_model.input, outputs=predictions) 

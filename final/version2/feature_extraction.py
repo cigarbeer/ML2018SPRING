@@ -14,6 +14,8 @@ from keras.callbacks import EarlyStopping
 from keras.callbacks import ModelCheckpoint 
 from keras.callbacks import ReduceLROnPlateau 
 
+from keras import metrics 
+
 import settings as st 
 
 def train_feature_extractor(train_generator, test_generator):
@@ -28,13 +30,7 @@ def train_feature_extractor(train_generator, test_generator):
     for layer in base_model.layers: 
         layer.trainable = False 
 
-    model.compile(optimizer='nadam', loss='categorical_crossentropy') 
-
-    # train_datagen = ImageDataGenerator(**st.IMAGE_DATA_GENERATOR_TRAIN_KARGS) 
-    # test_datagen = ImageDataGenerator(**st.IMAGE_DATA_GENERATOR_TEST_KARGS) 
-
-    # train_generator = train_datagen.flow_from_directory(directory=training_set_directory, **st.FLOW_FROM_DIRECTORY_KARGS) 
-    # test_generator = test_datagen.flow_from_directory(directory=training_set_directory, **st.FLOW_FROM_DIRECTORY_KARGS) 
+    model.compile(optimizer='nadam', loss='categorical_crossentropy', metrics=['accuracy']) 
 
     model.fit_generator( 
         generator=train_generator, 
@@ -43,7 +39,8 @@ def train_feature_extractor(train_generator, test_generator):
         verbose=1, 
         callbacks=[
             ModelCheckpoint(st.FEATURE_EXTRACTOR_PATH, monitor='val_loss', save_best_only=True, verbose=1), 
-            EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=10, verbose=1)
+            EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=10, verbose=1), 
+            ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=3, cooldown=2, min_lr=1e-6, verbose=1) 
         ], 
         validation_data=test_generator, 
         validation_steps=int(train_generator.samples/st.BATCH_SIZE), 
@@ -59,7 +56,7 @@ def train_feature_extractor(train_generator, test_generator):
     for layer in model.layers[249:]: 
         layer.trainable = True 
 
-    model.compile(optimizer='nadam', loss='categorical_crossentropy') 
+    model.compile(optimizer='nadam', loss='categorical_crossentropy', metrics=['accuracy']) 
 
     model.fit_generator( 
         generator=train_generator, 
@@ -68,7 +65,8 @@ def train_feature_extractor(train_generator, test_generator):
         verbose=1, 
         callbacks=[
             ModelCheckpoint(st.FEATURE_EXTRACTOR_PATH, monitor='val_loss', save_best_only=True, verbose=1), 
-            EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=10, verbose=1)
+            EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=10, verbose=1), 
+            ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=3, cooldown=2, min_lr=1e-6, verbose=1) 
         ], 
         validation_data=test_generator, 
         validation_steps=int(train_generator.samples/st.BATCH_SIZE), 

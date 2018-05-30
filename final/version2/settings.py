@@ -1,5 +1,3 @@
-# TRAINING_SET_DIR = '../dataset/train_classified' 
-N_TRAINING_EXAMPLES = 9850 
 N_CLASSES = 4251 
 BATCH_SIZE = 256  
 EPOCHS = 20 

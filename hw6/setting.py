@@ -5,4 +5,5 @@ VALIDATION_SPLIT = 0.001
 
 RATING_STATISTICS_PATH = './rating_statistics.npy' 
 MATRIX_FACTORIZATION_CHECKPOINT_PATH = './matrix_factorization.hdf5' 
+BEST_MODEL_CHECKPOINT_PATH = './hw6_best.hdf5' 
 

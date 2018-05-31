@@ -14,6 +14,8 @@ from keras.layers import Embedding
 from keras.layers import Dot 
 from keras.layers import Add 
 from keras.layers import Flatten 
+from keras.layers import Concatenate 
+from keras.layers import Dropout 
 
 from keras.callbacks import EarlyStopping 
 from keras.callbacks import ModelCheckpoint 
@@ -106,3 +108,36 @@ def read_testing_data(path):
 
 def load_matrix_factorization_model(): 
     return load_model(MATRIX_FACTORIZATION_CHECKPOINT_PATH) 
+
+
+def get_best_model(matrix_shape, latent_dimension): 
+    m, n = matrix_shape 
+    m = m + 1
+    n = n + 1 
+
+    input_m = Input(shape=(1,)) 
+    input_n = Input(shape=(1,)) 
+
+    embedding_m = Embedding(input_dim=m, output_dim=latent_dimension)(input_m)
+    embedding_n = Embedding(input_dim=n, output_dim=latent_dimension)(input_n) 
+
+    flatten_embedding_m = Flatten()(embedding_m) 
+    flatten_embedding_n = Flatten()(embedding_n)
+
+    concat_flatten_embedding_mn = Concatenate()([flatten_embedding_m, flatten_embedding_n]) 
+
+    dense_1 = Dense(units=latent_dimension, activation='selu')(concat_flatten_embedding_mn) 
+    dropout_1 = Dropout(rate=0.5)(dense_1)
+    dense_2 = Dense(units=latent_dimension, activation='selu')(dropout_1)
+    dropout_2 = Dropout(rate=0.5)(dense_2)
+    dense_3 = Dense(units=latent_dimension, activation='selu')(dropout_2) 
+    dropout_3 = Dropout(rate=0.5)(dense_3)
+
+    output = Dense(units=1, activation='relu')(dropout_3) 
+
+    model = Model(inputs=[input_m, input_n], outputs=[output]) 
+
+    model.compile(optimizer='rmsprop', loss='mse', metrics=['accuracy']) 
+    model.summary() 
+
+    return model  

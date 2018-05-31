@@ -16,6 +16,7 @@ from keras.layers import Add
 from keras.layers import Flatten 
 from keras.layers import Concatenate 
 from keras.layers import Dropout 
+from keras.layers import Average 
 
 from keras.callbacks import EarlyStopping 
 from keras.callbacks import ModelCheckpoint 
@@ -108,39 +109,26 @@ def read_testing_data(path):
 
 def load_matrix_factorization_model(): 
     return load_model(MATRIX_FACTORIZATION_CHECKPOINT_PATH) 
+ 
 
+def get_ensemble_model(): 
+    submodel1 = load_model(SUBMODEL_1_PATH) 
+    submodel2 = load_model(SUBMODEL_2_PATH) 
+    submodel3 = load_model(SUBMODEL_3_PATH) 
+    
+    common_input_m = Input(shape=(1,))
+    common_input_n = Input(shape=(1,))
 
-def get_best_model(matrix_shape, latent_dimension): 
-    m, n = matrix_shape 
-    m = m + 1
-    n = n + 1 
+    submodel1_output = submodel1([common_input_m, common_input_n])
+    submodel2_output = submodel2([common_input_m, common_input_n])
+    submodel3_output = submodel3([common_input_m, common_input_n]) 
 
-    input_m = Input(shape=(1,)) 
-    input_n = Input(shape=(1,)) 
+    common_output = Average()([submodel1_output, submodel2_output, submodel3_output]) 
 
-    embedding_m = Embedding(input_dim=m, output_dim=latent_dimension)(input_m)
-    embedding_n = Embedding(input_dim=n, output_dim=latent_dimension)(input_n) 
-
-    flatten_embedding_m = Flatten()(embedding_m) 
-    flatten_embedding_n = Flatten()(embedding_n)
-
-    concat_flatten_embedding_mn = Concatenate()([flatten_embedding_m, flatten_embedding_n]) 
-
-    dense_1 = Dense(units=latent_dimension, activation='selu')(concat_flatten_embedding_mn) 
-    dropout_1 = Dropout(rate=0.5)(dense_1)
-    dense_2 = Dense(units=latent_dimension, activation='selu')(dropout_1)
-    dropout_2 = Dropout(rate=0.5)(dense_2)
-    # dense_3 = Dense(units=latent_dimension, activation='selu')(dropout_2) 
-    # dropout_3 = Dropout(rate=0.5)(dense_3)
-
-    output = Dense(units=1, activation='relu')(dropout_2) 
-
-    model = Model(inputs=[input_m, input_n], outputs=[output]) 
-
-    model.compile(optimizer='rmsprop', loss='mse') 
+    model = Model(inputs=[common_input_m, common_input_n], outputs=[common_output]) 
     model.summary() 
-
+    model.save(ENSEMBLE_MODEL_PATH) 
     return model  
 
-def load_best_model(): 
-    return load_model(BEST_MODEL_CHECKPOINT_PATH)  
+def load_ensemble_model(): 
+    return load_model(ENSEMBLE_MODEL_PATH)  

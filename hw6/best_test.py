@@ -14,7 +14,7 @@ if __name__ == '__main__':
     print('[read testing data]')
     tuid, tmid = read_testing_data(test_data_path) 
     print('[load matrix factorization model]')
-    model = load_matrix_factorization_model() 
+    model = load_best_model() 
     print('[make prediction]')
     pred = predict(model, t=[tuid, tmid], batch_size=BATCH_SIZE) 
     print('[write prediction]')

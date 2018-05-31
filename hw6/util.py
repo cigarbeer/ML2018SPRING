@@ -130,10 +130,10 @@ def get_best_model(matrix_shape, latent_dimension):
     dropout_1 = Dropout(rate=0.5)(dense_1)
     dense_2 = Dense(units=latent_dimension, activation='selu')(dropout_1)
     dropout_2 = Dropout(rate=0.5)(dense_2)
-    dense_3 = Dense(units=latent_dimension, activation='selu')(dropout_2) 
-    dropout_3 = Dropout(rate=0.5)(dense_3)
+    # dense_3 = Dense(units=latent_dimension, activation='selu')(dropout_2) 
+    # dropout_3 = Dropout(rate=0.5)(dense_3)
 
-    output = Dense(units=1, activation='relu')(dropout_3) 
+    output = Dense(units=1, activation='relu')(dropout_2) 
 
     model = Model(inputs=[input_m, input_n], outputs=[output]) 
 

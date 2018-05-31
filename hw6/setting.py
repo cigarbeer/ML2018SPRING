@@ -10,5 +10,3 @@ SUBMODEL_1_PATH = './submodel_1.hdf5'
 SUBMODEL_2_PATH = './submodel_2.hdf5'
 SUBMODEL_3_PATH = './submodel_3.hdf5' 
 ENSEMBLE_MODEL_PATH = './ensemble.hdf5' 
-BEST_MODEL_CHECKPOINT_PATH = './hw6_best.hdf5' 
-

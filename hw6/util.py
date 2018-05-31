@@ -141,3 +141,6 @@ def get_best_model(matrix_shape, latent_dimension):
     model.summary() 
 
     return model  
+
+def load_best_model(): 
+    return load_model(BEST_MODEL_CHECKPOINT_PATH)  

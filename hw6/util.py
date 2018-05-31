@@ -137,7 +137,7 @@ def get_best_model(matrix_shape, latent_dimension):
 
     model = Model(inputs=[input_m, input_n], outputs=[output]) 
 
-    model.compile(optimizer='rmsprop', loss='mse', metrics=['accuracy']) 
+    model.compile(optimizer='rmsprop', loss='mse') 
     model.summary() 
 
     return model  

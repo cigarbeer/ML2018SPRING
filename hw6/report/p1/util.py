@@ -33,11 +33,12 @@ def read_training_data(path):
     return uid, mid, rating 
 
 def normalize_rating(rating): 
-    mu = np.mean(rating) 
-    sigma = np.std(rating) 
-    np.save(RATING_STATISTICS_PATH, [mu, sigma]) 
-    rating_normalized = (rating - mu) / sigma 
-    return rating_normalized 
+    # mu = np.mean(rating) 
+    # sigma = np.std(rating) 
+    np.save(RATING_STATISTICS_PATH, [0.0, 1.0]) 
+    # rating_normalized = (rating - mu) / sigma 
+    return rating 
+    # return rating_normalized 
 
 def get_matrix_factorization_model(matrix_shape, latent_dimension): 
     m, n = matrix_shape 

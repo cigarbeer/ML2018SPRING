@@ -33,14 +33,17 @@ def get_movies_by_genres(movies, genres):
 # model =  Model()
 if __name__ == '__main__': 
     model_path = sys.argv[1] 
+    movies_path = sys.argv[2] 
 
     model = load_model(model_path) 
 
+    movies = read_movies(movies_path)
+
     movie_emb = model.get_layer(name='embedding_2').get_weights()[0] 
 
-    comedy_mids = get_movies_by_genres('Comedy')
-    romance_mids = get_movies_by_genres('Romance')
-    action_mids = get_movies_by_genres('Action') 
+    comedy_mids = get_movies_by_genres(movies, 'Comedy')
+    romance_mids = get_movies_by_genres(movies, 'Romance')
+    action_mids = get_movies_by_genres(movies, 'Action') 
 
     comedy = movie_emb[comedy_mids] 
     romance = movie_emb[romance_mids] 

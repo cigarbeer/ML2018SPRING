@@ -21,6 +21,7 @@ def load_object(path):
 def read_movies(path): 
     df = pd.read_table(path, sep='::') 
     df.Genres = df.Genres.str.split('|') 
+    return df 
 
 def get_movies_by_genres(movies, genres): 
     mids = [] 

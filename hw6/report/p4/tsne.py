@@ -14,9 +14,9 @@ def save_object(obj, path):
 def load_object(path): 
     obj = None 
     with open(path, mode='rb') as f: 
-        obj = pickle.load(path) 
+        obj = pickle.load(f) 
         f.close() 
-    return obj 
+    return obj
 
 def read_movies(path): 
     df = pd.read_table(path, sep='::') 

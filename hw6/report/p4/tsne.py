@@ -52,9 +52,9 @@ if __name__ == '__main__':
 
     concat = np.concatenate([comedy, romance, action]) 
 
-    tsne = TSNE(n_components=2) 
+    tsne = TSNE(n_components=2, verbose=1)  
 
-    concat_2d = tsne.fit(concat, ver)  
+    concat_2d = tsne.fit(concat)  
 
     save_object(concat_2d, './concate_2d.pickle')
     

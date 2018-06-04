@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np 
 import sys 
 import pickle 
+import matplotlib.pyplot as plt 
 
 def save_object(obj, path): 
     with open(path, mode='wb') as f: 
@@ -54,10 +55,26 @@ if __name__ == '__main__':
 
     tsne = TSNE(n_components=2, verbose=1)  
 
-    concat_2d = tsne.fit(concat)  
+    tsne.fit(concat)  
 
-    save_object(concat_2d, './concate_2d.pickle')
+    save_object(tsne, './tsne.pickle') 
+
+    concat_2d = tsne.embedding_ 
+
+    comedy_len = len(comedy) 
+    romance_len = len(romance) 
+    action_len = len(action) 
+
+    comedy_2d = concat_2d[:comedy_len] 
+    romance_2d = concat_2d[comedy_len:comedy_len+romance_len] 
+    action_2d = concat_2d[comedy_len+romance_len:] 
+
+    fig, ax = plt.subplots()
+    ax.scatter(comedy_2d[:, 0], comedy_2d[:, 1], label='Comedy')
+    ax.scatter(romance_2d[:, 0], romance_2d[:, 1], label='Romance')
+    ax.scatter(action_2d[:, 0], action_2d[:, 1], label='Action')
+    ax.legend()
+    fig.savefig('./tsne.png') 
     
-
 
 

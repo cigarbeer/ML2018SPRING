@@ -72,9 +72,9 @@ if __name__ == '__main__':
     action_2d = concat_2d[comedy_len+romance_len:] 
 
     fig, ax = plt.subplots()
-    ax.scatter(comedy_2d[:, 0], comedy_2d[:, 1], label='Comedy', s=0.5)
-    ax.scatter(romance_2d[:, 0], romance_2d[:, 1], label='Romance', s=0.5)
-    ax.scatter(action_2d[:, 0], action_2d[:, 1], label='Action', s=0.5)
+    ax.scatter(comedy_2d[:, 0], comedy_2d[:, 1], label='Comedy', s=1.5)
+    ax.scatter(romance_2d[:, 0], romance_2d[:, 1], label='Romance', s=1.5)
+    ax.scatter(action_2d[:, 0], action_2d[:, 1], label='Action', s=1.5)
     ax.legend()
     fig.savefig('./tsne.png') 
 

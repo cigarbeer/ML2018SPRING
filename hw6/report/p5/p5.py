@@ -62,7 +62,7 @@ def make_training(uid, mid, users, movies):
     train = [] 
     for u, m in zip(uid, mid): 
         train.append(np.concatenate([users[u], movies[m]])) 
-    return np.concatenate(train) 
+    return np.stack(train) 
 
 def get_model(input_shape):
     input_layer = Input(shape=input_shape) 

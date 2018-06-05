@@ -22,7 +22,7 @@ from keras.callbacks import ModelCheckpoint
 
 def read_users(path): 
     df = pd.read_table(path, sep='::') 
-    df = df.drop(columns=['Zip-code']) 
+    # df = df.drop(columns=['Zip-code']) 
     df = df.sort_values(by=['UserID']) 
     df.Gender[df.Gender == 'M'] = 1 
     df.Gender[df.Gender == 'F'] = 0 
@@ -37,7 +37,7 @@ def read_users(path):
 
 def read_movies(path): 
     df = pd.read_table(path, sep='::') 
-    df = df.drop(columns=['Title']) 
+    # df = df.drop(columns=['Title']) 
     df = df.sort_values(by=['movieID']) 
     genres = np.unique(np.concatenate(df['Genres'].str.split('|').values)) 
     df['Genres'] = df['Genres'].str.split('|') 
@@ -62,7 +62,7 @@ def make_training(uid, mid, users, movies):
     train = [] 
     for u, m in zip(uid, mid): 
         train.append(np.concatenate([users[u], movies[m]])) 
-    return train 
+    return np.concatenate(train) 
 
 def get_model(input_shape):
     input_layer = Input(shape=input_shape) 
@@ -72,7 +72,7 @@ def get_model(input_shape):
     x = Dense(128, activation='selu')(x) 
     x = BatchNormalization()(x) 
     x = Dropout(0.5)(x)
-    x = Dense(64), activation='selu'(x) 
+    x = Dense(64, activation='selu')(x) 
     x = BatchNormalization()(x) 
     x = Dropout(0.5)(x)
     x = Dense(128, activation='selu')(x) 

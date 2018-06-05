@@ -26,10 +26,12 @@ def read_users(path):
     df.Gender[df.Gender == 'M'] = 1 
     df.Gender[df.Gender == 'F'] = 0 
     gender = to_categorical(df.Gender) 
-    user_id = df.UserID
-    age = df.Age.reshape((-1, 1)) 
+    user_id = df.UserID.values.reshape((-1, 1))
+    age = df.Age.values.reshape((-1, 1)) 
     occupation = to_categorical(df.Occupation) 
-    users = np.concatenate([user_id, gender, age, occupation]) 
+    users = np.concatenate([gender, age, occupation], axis=1) 
+    m, n = users.shape
+    users = np.concatenate([np.zeros((1, n)), users]) 
     return users 
 
 def read_movies(path): 
@@ -45,7 +47,7 @@ def read_movies(path):
     for index, row in df.iterrows():
         for g in row['Genres']: 
             genres_onehot[row['movieID']][genres_dct[g]] = 1.0 
-    return genres 
+    return genres_onehot, genres_dct  
 
 
 

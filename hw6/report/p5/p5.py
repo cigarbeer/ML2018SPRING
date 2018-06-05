@@ -36,12 +36,12 @@ def read_movies(path):
     df = pd.read_table(path, sep='::') 
     df = df.drop(columns=['Title']) 
     df = df.sort_values(by=['movieID']) 
-    df['Genres'] = df['Genres'].str.split('|') 
     genres = np.unique(np.concatenate(df['Genres'].str.split('|').values)) 
+    df['Genres'] = df['Genres'].str.split('|') 
     genres_dct = {}
     for i, g in enumerate(genres): 
         genres_dct[g] = i 
-    genres_onehot = np.zeros((len(df)+1, len(genres_dct))) 
+    genres_onehot = np.zeros((df['movieID'].max()+1, len(genres_dct))) 
     for index, row in df.iterrows():
         for g in row['Genres']: 
             genres_onehot[row['movieID']][genres_dct[g]] = 1.0 

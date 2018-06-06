@@ -113,13 +113,8 @@ def read_testing(path):
     return tuid, tmid   
 
 def make_testing(tuid, tmid, users, movies): 
-    test = [] 
-    for u, m in zip(tuid, tmid):  
-        t = np.array([tuid]) 
-        t = np.append(t, users[u])
-        t = np.append(t, np.array([tmid]))
-        t = np.append(t, movies[m]) 
-    return np.stack(test) 
+    test = np.concatenate([tuid.values.reshape((-1, 1)), users[tuid], tmid.values.reshape((-1, 1)), movies[tmid]], axis=1) 
+    return test  
 
 def predict(model, t): 
     pred = model.predict(t) 

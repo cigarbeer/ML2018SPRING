@@ -30,7 +30,7 @@ def read_users(path):
     user_id = df.UserID.values.reshape((-1, 1))
     age = df.Age.values.reshape((-1, 1)) 
     occupation = to_categorical(df.Occupation) 
-    users = np.concatenate([gender, age, occupation], axis=1) 
+    users = np.concatenate([user_id ,gender, age, occupation], axis=1) 
     m, n = users.shape
     users = np.concatenate([np.zeros((1, n)), users]) 
     return users 
@@ -44,10 +44,11 @@ def read_movies(path):
     genres_dct = {}
     for i, g in enumerate(genres): 
         genres_dct[g] = i 
-    genres_onehot = np.zeros((df['movieID'].max()+1, len(genres_dct))) 
+    genres_onehot = np.zeros((df['movieID'].max()+1, len(genres_dct)+1)) 
     for index, row in df.iterrows():
         for g in row['Genres']: 
-            genres_onehot[row['movieID']][genres_dct[g]] = 1.0 
+            genres_onehot[row['movieID']][0] = row['movieID'] 
+            genres_onehot[row['movieID']][genres_dct[g]+1] = 1.0 
     return genres_onehot, genres_dct  
 
 def read_training(path): 
@@ -105,3 +106,40 @@ def train(model, X, y):
     ) 
     return model 
 
+def read_testing(path): 
+    df = pd.read_csv(path) 
+    tuid = df.UserID 
+    tmid = df.MovieID 
+    return tuid, tmid   
+
+def make_testing(tuid, tmid, users, movies): 
+    test = [] 
+    for u, m in zip(tuid, tmid):  
+        test.append(np.concatenate([[tuid], users[u], [tmid], movies[m]])) 
+    return np.stack(test) 
+
+def predict(model, t): 
+    pred = model.predict(t) 
+    return pred 
+
+def write_prediction(pred, path): 
+    df = pd.DataFrame(columns=['Rating'], data=pred) 
+    df.index = df.index + 1 
+    df.to_csv(path, index=True, index_label='TestDataID', float_format='%.3f') 
+    return df
+
+
+def main(): 
+    users = read_users(sys.argv[1]) 
+    movies, movies_dct = read_movies(sys.argv[2]) 
+    uid, mid, rating = read_training(sys.argv[3]) 
+    X = make_training(uid, mid, users, movies) 
+    model = get_model(X[0].shape) 
+    train(model, X, rating) 
+    model = load_model('./p5.hdf5') 
+    tuid, tmid = read_testing(sys.argv[4]) 
+    t = make_testing(tuid, tmid, users, movies) 
+    pred = predict(model, test) 
+    write_prediction(pred, './p5.csv') 
+
+    

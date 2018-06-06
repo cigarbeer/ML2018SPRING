@@ -113,7 +113,7 @@ def read_testing(path):
     return tuid, tmid   
 
 def make_testing(tuid, tmid, users, movies): 
-    test = np.concatenate([tuid.values.reshape((-1, 1)), users[tuid], tmid.values.reshape((-1, 1)), movies[tmid]], axis=1) 
+    test = np.concatenate([users[tuid], movies[tmid]], axis=1) 
     return test  
 
 def predict(model, t): 
@@ -137,7 +137,7 @@ def main():
     model = load_model('./p5.hdf5') 
     tuid, tmid = read_testing(sys.argv[4]) 
     t = make_testing(tuid, tmid, users, movies) 
-    pred = predict(model, test) 
+    pred = predict(model, t) 
     write_prediction(pred, './p5.csv') 
 
 

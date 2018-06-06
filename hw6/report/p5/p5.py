@@ -140,4 +140,6 @@ def main():
     pred = predict(model, test) 
     write_prediction(pred, './p5.csv') 
 
-    
+
+if __name__ == '__main__': 
+    main()

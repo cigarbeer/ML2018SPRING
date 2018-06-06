@@ -100,7 +100,7 @@ def train(model, X, y):
         batch_size=512, 
         epochs=100, 
         callbacks=callbacks, 
-        validation_split=0.1, 
+        validation_split=0.01, 
         shuffle=True, 
         verbose=1 
     ) 
@@ -115,7 +115,10 @@ def read_testing(path):
 def make_testing(tuid, tmid, users, movies): 
     test = [] 
     for u, m in zip(tuid, tmid):  
-        test.append(np.concatenate([[tuid], users[u], [tmid], movies[m]])) 
+        t = np.array([tuid]) 
+        t = np.append(t, users[u])
+        t = np.append(t, np.array([tmid]))
+        t = np.append(t, movies[m]) 
     return np.stack(test) 
 
 def predict(model, t): 
